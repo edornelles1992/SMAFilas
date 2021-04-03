@@ -18,15 +18,15 @@ public class Fila {
 	public Escalonador escalonador = new Escalonador();
 
 	public Fila() {
-
+		
 	}
-
-	@Override
-	public String toString() {
-		return "Fila [tempoChegadaMinimo=" + tempoChegadaMinimo + ", tempoChegadaMaximo=" + tempoChegadaMaximo
-				+ ", tempoAtendimentoMinimo=" + tempoAtendimentoMinimo + ", tempoAtendimentoMaximo="
-				+ tempoAtendimentoMaximo + ", numeroServidores=" + numeroServidores + ", capacidadeFila="
-				+ capacidadeFila + ", clientesNaFila=" + clientesNaFila + "]";
+	
+	public void executaFila(int qtdAleatorios) {
+		this.chegada(primeiroClienteTempo); //inicio do algoritmo
+		tempo = primeiroClienteTempo;
+		for (int i = 0; i < qtdAleatorios; i++) {
+			this.chegada(tempo);
+		}
 	}
 
 	public void chegada(double tempoEvento) {
@@ -34,17 +34,26 @@ public class Fila {
 		if (clientesNaFila < capacidadeFila) {
 			clientesNaFila++;
 			if (clientesNaFila <= 1) {
-				//agenda SAIDA(T+rnd(tempoAtendimentoMinimo..tempoAtendimentoMaximo)
+				this.saida(escalonador.sorteio(tempo, Tipo.SAIDA, tempoAtendimentoMinimo, tempoAtendimentoMaximo));
 			}
 		}
-		//agenda CHEGADA(T+rnd(tempoChegadaMinimo..tempoChegadaMaximo))
+		this.chegada(tempo + escalonador.sorteio(tempo, Tipo.CHEGADA, tempoChegadaMinimo, tempoChegadaMaximo));
 	}
 
 	public void saida(double tempoEvento) {
 		tempo += tempoEvento;
 		clientesNaFila--;
 		if (clientesNaFila >= 1) {
-			//agenda SAIDA(T+rnd(tempoAtendimentoMinimo..tempoAtendimentoMaximo)
+			this.saida(escalonador.sorteio(tempo, Tipo.SAIDA, tempoAtendimentoMinimo, tempoAtendimentoMaximo));
 		}
+	}
+	
+
+	@Override
+	public String toString() {
+		return "Fila [tempoChegadaMinimo=" + tempoChegadaMinimo + ", tempoChegadaMaximo=" + tempoChegadaMaximo
+				+ ", tempoAtendimentoMinimo=" + tempoAtendimentoMinimo + ", tempoAtendimentoMaximo="
+				+ tempoAtendimentoMaximo + ", numeroServidores=" + numeroServidores + ", capacidadeFila="
+				+ capacidadeFila + ", clientesNaFila=" + clientesNaFila + "]";
 	}
 }

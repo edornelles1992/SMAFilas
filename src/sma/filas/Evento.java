@@ -4,6 +4,7 @@ public class Evento {
 	public Tipo tipo;
 	public double tempo;
 	public double sorteio;
+	public boolean agendado;
 
 	public Evento(Tipo tipo, double tempo, double sorteio) {
 		super();

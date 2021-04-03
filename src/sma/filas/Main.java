@@ -9,7 +9,7 @@ public class Main {
 	public static void main(String[] args) throws FileNotFoundException {
 		System.out.println("========= SIMULADOR DE FILA SIMPLES ==========");
 		Fila fila = lerDadosFila();
-		System.out.println(fila);
+		fila.executaFila(100);
 	}
 
 	private static Fila lerDadosFila() throws FileNotFoundException {
