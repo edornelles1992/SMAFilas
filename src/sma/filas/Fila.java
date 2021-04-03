@@ -1,5 +1,8 @@
 package sma.filas;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Fila {
 
 	//paramtros recebidos
@@ -10,41 +13,56 @@ public class Fila {
 	public int numeroServidores;
 	public int capacidadeFila;
 	public double tempo = 0;
+	public int qtdAleatorios = 0;
+	public List<Evento> eventosOcorridos = new ArrayList<>();
+	public Escalonador escalonador;
 	
 	//parametros fixos
 	public int clientesNaFila = 0;	
 	public double primeiroClienteTempo = 3;
-	
-	public Escalonador escalonador = new Escalonador();
-
-	public Fila() {
 		
-	}
-	
 	public void executaFila(int qtdAleatorios) {
-		this.chegada(primeiroClienteTempo); //inicio do algoritmo
-		tempo = primeiroClienteTempo;
-		for (int i = 0; i < qtdAleatorios; i++) {
-			this.chegada(tempo);
+		escalonador = new Escalonador(primeiroClienteTempo);
+		this.qtdAleatorios = qtdAleatorios;
+
+
+		while (true) {
+			Evento evento = escalonador.executaProximoEvento();
+			this.eventosOcorridos.add(evento);	
+			if (evento.tipo.equals(Tipo.CHEGADA)) {
+				this.chegada(tempo + evento.tempo); 
+			} else {
+				this.saida(tempo + evento.tempo); 
+			}			
 		}
 	}
 
 	public void chegada(double tempoEvento) {
+		this.validaFimDosAleatorios();
 		tempo += tempoEvento;
 		if (clientesNaFila < capacidadeFila) {
 			clientesNaFila++;
-			if (clientesNaFila <= 1) {
-				this.saida(escalonador.sorteio(tempo, Tipo.SAIDA, tempoAtendimentoMinimo, tempoAtendimentoMaximo));
+			if (clientesNaFila <= numeroServidores) { //chegou e se encontra de frente pra um servidor? agenda saída
+				escalonador.agendaEvento(tempo, Tipo.SAIDA, tempoAtendimentoMinimo, tempoAtendimentoMaximo);
 			}
 		}
-		this.chegada(tempo + escalonador.sorteio(tempo, Tipo.CHEGADA, tempoChegadaMinimo, tempoChegadaMaximo));
+	//	this.chegada(tempo + escalonador.agendaEvento(tempo, Tipo.CHEGADA, tempoChegadaMinimo, tempoChegadaMaximo));
+		escalonador.agendaEvento(tempo, Tipo.CHEGADA, tempoChegadaMinimo, tempoChegadaMaximo);
 	}
 
 	public void saida(double tempoEvento) {
+		this.validaFimDosAleatorios();
 		tempo += tempoEvento;
 		clientesNaFila--;
-		if (clientesNaFila >= 1) {
-			this.saida(escalonador.sorteio(tempo, Tipo.SAIDA, tempoAtendimentoMinimo, tempoAtendimentoMaximo));
+		if (clientesNaFila >= 1) {//TODO: 1 ou numeroServidores??
+			escalonador.agendaEvento(tempo, Tipo.SAIDA, tempoAtendimentoMinimo, tempoAtendimentoMaximo);
+		}
+	}
+	
+	public void validaFimDosAleatorios() {
+		if (qtdAleatorios == escalonador.qtdAleatorios) {
+			System.out.println("Gerou "+ qtdAleatorios + " Aleatórios!! FIM!!!");
+			System.exit(0);
 		}
 	}
 	
