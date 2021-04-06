@@ -27,26 +27,25 @@ public class Fila {
 		escalonador = new Escalonador(primeiroClienteTempo);
 		this.qtdAleatorios = qtdAleatorios;
 		estadoFila = new double[capacidadeFila];
-		estadoFila[0] = primeiroClienteTempo;
-		clientesNaFila++;
+//		estadoFila[0] = primeiroClienteTempo;
+//		clientesNaFila++;
 
 		while (true) {
 			Evento evento = escalonador.executaProximoEvento();
-			estadoFila[clientesNaFila - 1] = evento.sorteio > 0 ? evento.sorteio : evento.tempo; //caso n tenha sorteio é o primeiro evento.
 			this.eventosOcorridos.add(evento);			
 			if (evento.tipo.equals(Tipo.CHEGADA)) {
-				this.chegada(tempo + evento.tempo); 
+				this.chegada(evento.sorteio); 
 			} else {
-				this.saida(tempo + evento.tempo); 
-			}	
-			
+				this.saida(evento.sorteio); 
+			}				
 		}
 	}
 
-	public void chegada(double tempoEvento) {
+	public void chegada(double tempoSorteio) {
 		this.validaFimDosAleatorios();
-		tempo += tempoEvento;
-		if (capacidadeFila == -1 || clientesNaFila < capacidadeFila) {
+		tempo += tempoSorteio ==  0 ? primeiroClienteTempo : tempoSorteio;
+		if (capacidadeFila == -1 || clientesNaFila < capacidadeFila) {	
+			estadoFila[clientesNaFila] = tempoSorteio == 0 ? primeiroClienteTempo : tempoSorteio;
 			clientesNaFila++;
 			if (clientesNaFila <= numeroServidores) { //chegou e se encontra de frente pra um servidor? agenda saída
 				escalonador.agendaEvento(tempo, Tipo.SAIDA, tempoAtendimentoMinimo, tempoAtendimentoMaximo);
@@ -55,9 +54,11 @@ public class Fila {
 		escalonador.agendaEvento(tempo, Tipo.CHEGADA, tempoChegadaMinimo, tempoChegadaMaximo);
 	}
 
-	public void saida(double tempoEvento) {
+	public void saida(double tempoSorteio) {
 		this.validaFimDosAleatorios();
-		tempo += tempoEvento;
+		double tempoAnterior = new Double(tempo);	
+		tempo += tempoSorteio;
+		estadoFila[clientesNaFila - 1] =  (tempoAnterior - tempoSorteio) + estadoFila[clientesNaFila - 1];
 		clientesNaFila--;
 		if (clientesNaFila >= 1) {//TODO: 1 ou numeroServidores??
 			escalonador.agendaEvento(tempo, Tipo.SAIDA, tempoAtendimentoMinimo, tempoAtendimentoMaximo);

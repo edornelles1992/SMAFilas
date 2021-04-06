@@ -15,12 +15,11 @@ public class Escalonador {
 		eventosAgendados.add(eventoInicial);
 	}
 
-	public double agendaEvento(double tempo, Tipo tipoEvento, int minimo, int maximo) {
+	public void agendaEvento(double tempo, Tipo tipoEvento, int minimo, int maximo) {
 		double nroSorteado = (maximo - minimo) * random.nextDouble() + minimo;
 		double tempoTotal = tempo + nroSorteado;
 		eventosAgendados.add(new Evento(tipoEvento, tempoTotal, nroSorteado));
 		qtdAleatorios++;
-		return tempoTotal;
 	}
 
 	public Evento executaProximoEvento() {
