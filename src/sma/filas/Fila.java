@@ -15,6 +15,8 @@ public class Fila {
 	public double tempo = 0;
 	public int qtdAleatorios = 0;
 	public List<Evento> eventosOcorridos = new ArrayList<>();
+	//controle dos tempos dos estados da fila
+	public double[] estadoFila = null;
 	public Escalonador escalonador;
 	
 	//parametros fixos
@@ -24,29 +26,32 @@ public class Fila {
 	public void executaFila(int qtdAleatorios) {
 		escalonador = new Escalonador(primeiroClienteTempo);
 		this.qtdAleatorios = qtdAleatorios;
-
+		estadoFila = new double[capacidadeFila];
+		estadoFila[0] = primeiroClienteTempo;
+		clientesNaFila++;
 
 		while (true) {
 			Evento evento = escalonador.executaProximoEvento();
-			this.eventosOcorridos.add(evento);	
+			estadoFila[clientesNaFila - 1] = evento.sorteio > 0 ? evento.sorteio : evento.tempo; //caso n tenha sorteio é o primeiro evento.
+			this.eventosOcorridos.add(evento);			
 			if (evento.tipo.equals(Tipo.CHEGADA)) {
 				this.chegada(tempo + evento.tempo); 
 			} else {
 				this.saida(tempo + evento.tempo); 
-			}			
+			}	
+			
 		}
 	}
 
 	public void chegada(double tempoEvento) {
 		this.validaFimDosAleatorios();
 		tempo += tempoEvento;
-		if (clientesNaFila < capacidadeFila) {
+		if (capacidadeFila == -1 || clientesNaFila < capacidadeFila) {
 			clientesNaFila++;
 			if (clientesNaFila <= numeroServidores) { //chegou e se encontra de frente pra um servidor? agenda saída
 				escalonador.agendaEvento(tempo, Tipo.SAIDA, tempoAtendimentoMinimo, tempoAtendimentoMaximo);
 			}
 		}
-	//	this.chegada(tempo + escalonador.agendaEvento(tempo, Tipo.CHEGADA, tempoChegadaMinimo, tempoChegadaMaximo));
 		escalonador.agendaEvento(tempo, Tipo.CHEGADA, tempoChegadaMinimo, tempoChegadaMaximo);
 	}
 
