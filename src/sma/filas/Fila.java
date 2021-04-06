@@ -24,6 +24,7 @@ public class Fila {
 	public double primeiroClienteTempo = 3;
 		
 	public void executaFila(int qtdAleatorios) {
+		capacidadeFila = 3; //TODO: retirar quando tiver funcionando
 		escalonador = new Escalonador(primeiroClienteTempo);
 		this.qtdAleatorios = qtdAleatorios;
 		estadoFila = new double[capacidadeFila];
@@ -45,7 +46,7 @@ public class Fila {
 		this.validaFimDosAleatorios();
 		tempo += tempoSorteio ==  0 ? primeiroClienteTempo : tempoSorteio;
 		if (capacidadeFila == -1 || clientesNaFila < capacidadeFila) {	
-			estadoFila[clientesNaFila] = tempoSorteio == 0 ? primeiroClienteTempo : tempoSorteio;
+			estadoFila[clientesNaFila] = tempoSorteio == 0 ? primeiroClienteTempo : estadoFila[clientesNaFila] + tempoSorteio; //TODO
 			clientesNaFila++;
 			if (clientesNaFila <= numeroServidores) { //chegou e se encontra de frente pra um servidor? agenda saída
 				escalonador.agendaEvento(tempo, Tipo.SAIDA, tempoAtendimentoMinimo, tempoAtendimentoMaximo);
@@ -68,6 +69,11 @@ public class Fila {
 	public void validaFimDosAleatorios() {
 		if (qtdAleatorios == escalonador.qtdAleatorios) {
 			System.out.println("Gerou "+ qtdAleatorios + " Aleatórios!! FIM!!!");
+			double tempototal = 0;
+			for (int i = 0; i < estadoFila.length; i++) {
+				tempototal += estadoFila[i];
+			}
+			System.out.println(tempototal);
 			System.exit(0);
 		}
 	}
