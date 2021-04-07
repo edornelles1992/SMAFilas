@@ -7,3 +7,4 @@
 5 // intervalo final tempo de atendimento de um cliente na fila;
 1 // número de servidores;
 5 // capacidade da fila. -1 = capacidade infinita
+7 // seed utilizada para geração dos numeros aleatórios

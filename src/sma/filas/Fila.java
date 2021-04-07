@@ -23,9 +23,9 @@ public class Fila {
 	public int clientesNaFila = 0;	
 	public double primeiroClienteTempo = 3;
 		
-	public void executaFila(int qtdAleatorios) {
+	public void executaFila(int qtdAleatorios, long seed) {
 		capacidadeFila = 3; //TODO: retirar quando tiver funcionando
-		escalonador = new Escalonador(primeiroClienteTempo);
+		escalonador = new Escalonador(primeiroClienteTempo, seed);
 		this.qtdAleatorios = qtdAleatorios;
 		estadoFila = new double[capacidadeFila];
 //		estadoFila[0] = primeiroClienteTempo;
@@ -68,12 +68,23 @@ public class Fila {
 	
 	public void validaFimDosAleatorios() {
 		if (qtdAleatorios == escalonador.qtdAleatorios) {
+			System.out.println("=============RESULTADOS===============");
 			System.out.println("Gerou "+ qtdAleatorios + " Aleatórios!! FIM!!!");
 			double tempototal = 0;
 			for (int i = 0; i < estadoFila.length; i++) {
 				tempototal += estadoFila[i];
 			}
-			System.out.println(tempototal);
+
+			System.out.println();
+			System.out.println("Estado | Tempo | Probabilidade");
+			for (int i = 0; i < estadoFila.length; i++) {
+				String estado = String.format("%.2f", estadoFila[i]);
+				String probabilidade = String.format("%.2f", estadoFila[i] * (tempototal/100));
+				System.out.println(i + "        " + estado + "       " + probabilidade + "%");
+			}
+			System.out.println();
+			System.out.println("tempo total: " + tempototal);
+			System.out.println("==============FIM===================");
 			System.exit(0);
 		}
 	}
