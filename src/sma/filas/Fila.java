@@ -23,12 +23,12 @@ public class Fila {
 	public int clientesNaFila = 0;	
 	public double primeiroClienteTempo = 3;
 		
-	public void executaFila(int qtdAleatorios, long seed) {
+	public double[] executaFila(int qtdAleatorios, long seed) {
 		escalonador = new Escalonador(primeiroClienteTempo, seed);
 		this.qtdAleatorios = qtdAleatorios;
 		estadoFila = new double[capacidadeFila];
 
-		while (true) {
+		while (escalonador.qtdAleatorios < qtdAleatorios) {
 			Evento evento = escalonador.executaProximoEvento();
 			this.eventosOcorridos.add(evento);			
 			if (evento.tipo.equals(Tipo.CHEGADA)) {
@@ -37,13 +37,15 @@ public class Fila {
 				this.saida(evento.sorteio); 
 			}				
 		}
+		validaFimDosAleatorios();
+		return estadoFila;
 	}
 
 	public void chegada(double tempoSorteio) {
-		this.validaFimDosAleatorios();
+		double tempoAnterior = new Double(tempo);	
 		tempo += tempoSorteio ==  0 ? primeiroClienteTempo : tempoSorteio;
 		if (capacidadeFila == -1 || clientesNaFila < capacidadeFila) {	
-			estadoFila[clientesNaFila] = tempoSorteio == 0 ? primeiroClienteTempo : estadoFila[clientesNaFila] + tempoSorteio; //TODO
+			estadoFila[clientesNaFila] = tempoSorteio == 0 ? primeiroClienteTempo :  (tempoAnterior - tempoSorteio) + estadoFila[clientesNaFila]; //TODO
 			clientesNaFila++;
 			if (clientesNaFila <= numeroServidores) { //chegou e se encontra de frente pra um servidor? agenda saída
 				escalonador.agendaEvento(tempo, Tipo.SAIDA, tempoAtendimentoMinimo, tempoAtendimentoMaximo);
@@ -53,7 +55,6 @@ public class Fila {
 	}
 
 	public void saida(double tempoSorteio) {
-		this.validaFimDosAleatorios();
 		double tempoAnterior = new Double(tempo);	
 		tempo += tempoSorteio;
 		estadoFila[clientesNaFila - 1] =  (tempoAnterior - tempoSorteio) + estadoFila[clientesNaFila - 1];
@@ -64,7 +65,6 @@ public class Fila {
 	}
 	
 	public void validaFimDosAleatorios() {
-		if (qtdAleatorios == escalonador.qtdAleatorios) {
 			System.out.println("=============RESULTADOS===============");
 			System.out.println("Gerou "+ qtdAleatorios + " Aleatórios!! FIM!!!");
 			double tempototal = 0;
@@ -82,9 +82,7 @@ public class Fila {
 			String tempototaltxt = String.format("%.3f", tempototal);
 			System.out.println();
 			System.out.println("tempo total: " + tempototaltxt);
-			System.out.println("==============FIM===================");
-			System.exit(0);
-		}
+			System.out.println("=================================");	
 	}
 	
 
