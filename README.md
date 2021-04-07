@@ -12,7 +12,7 @@ GRUPO 12 - Eduardo Dornelles e João Almeida
 5 // intervalo final tempo de atendimento de um cliente na fila;
 1 // número de servidores;
 5 // capacidade da fila. -1 = capacidade infinita
-7 // seed utilizada para geração dos numeros aleatórios. nenhuma ou menor igual zero -> utiliza default da linguagem.
+5,6,7,8,9 // seeds utilizada para geração dos numeros aleatórios (bater com a quantidade de simulações).
 5 // quantidade de simulações. se não for informada nenhuma por default é 1.
 
 EXECUÇÃO:
