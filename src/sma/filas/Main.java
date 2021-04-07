@@ -53,7 +53,7 @@ public class Main {
 		System.out.println("tempoAtendimentoMinimo: " + fila.tempoAtendimentoMinimo);
 		System.out.println("tempoAtendimentoMaximo: " + fila.tempoAtendimentoMaximo);
 		System.out.println("numeroServidores: " + fila.numeroServidores);
-		System.out.println("capacidadeFila: " + fila.capacidadeFila);
+		System.out.println("capacidadeFila: " + (fila.capacidadeFila - 1));
 		System.out.println("seed: "+ Arrays.toString(seedsCarregadas));
 		System.out.println("==========================");
 		System.out.println();
