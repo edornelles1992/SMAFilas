@@ -61,7 +61,7 @@ public class Fila {
 		tempo += tempoSorteio;
 		estadoFila[clientesNaFila - 1] =  (tempoAnterior - tempoSorteio) + estadoFila[clientesNaFila - 1];
 		clientesNaFila--;
-		if (clientesNaFila >= 1) {//TODO: 1 ou numeroServidores??
+		if (clientesNaFila >= numeroServidores) {
 			escalonador.agendaEvento(tempo, Tipo.SAIDA, tempoAtendimentoMinimo, tempoAtendimentoMaximo);
 		}
 	}
@@ -79,7 +79,7 @@ public class Fila {
 			System.out.println("Estado | Tempo | Probabilidade");
 			for (int i = 0; i < estadoFila.length; i++) {
 				String estado = String.format("%.2f", estadoFila[i]);
-				String probabilidade = String.format("%.2f", estadoFila[i] * (tempototal/100));
+				String probabilidade = String.format("%.2f", (estadoFila[i] * 100) / tempototal);
 				System.out.println(i + "        " + estado + "       " + probabilidade + "%");
 			}
 			System.out.println();
