@@ -12,7 +12,7 @@ public class Main {
 		System.out.println("========= SIMULADOR DE FILA SIMPLES ==========");
 		Fila fila = lerDadosFila();
 		displayDadosRecebidos(fila);
-		fila.executaFila(10, seedCarregada); //TODO: trocar para 100mil quando tiver ok
+		fila.executaFila(100000, seedCarregada); //TODO: trocar para 100mil quando tiver ok
 	}
 
 	private static void displayDadosRecebidos(Fila fila) {

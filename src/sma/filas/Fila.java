@@ -24,12 +24,9 @@ public class Fila {
 	public double primeiroClienteTempo = 3;
 		
 	public void executaFila(int qtdAleatorios, long seed) {
-		capacidadeFila = 3; //TODO: retirar quando tiver funcionando
 		escalonador = new Escalonador(primeiroClienteTempo, seed);
 		this.qtdAleatorios = qtdAleatorios;
 		estadoFila = new double[capacidadeFila];
-//		estadoFila[0] = primeiroClienteTempo;
-//		clientesNaFila++;
 
 		while (true) {
 			Evento evento = escalonador.executaProximoEvento();
@@ -82,8 +79,9 @@ public class Fila {
 				String probabilidade = String.format("%.2f", (estadoFila[i] * 100) / tempototal);
 				System.out.println(i + "        " + estado + "       " + probabilidade + "%");
 			}
+			String tempototaltxt = String.format("%.3f", tempototal);
 			System.out.println();
-			System.out.println("tempo total: " + tempototal);
+			System.out.println("tempo total: " + tempototaltxt);
 			System.out.println("==============FIM===================");
 			System.exit(0);
 		}

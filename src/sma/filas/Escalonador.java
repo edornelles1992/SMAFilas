@@ -12,7 +12,7 @@ public class Escalonador {
 	public long seed;
 	
 	 Escalonador(double tempo, long seed) { // instancia o escalonador com o primeiro evento agendado no tempo recebido
-		 random = new Random(seed);
+		 random = seed <= 0 ? new Random() : new Random(seed);
 		Evento eventoInicial = new Evento(Tipo.CHEGADA, tempo);
 		eventosAgendados.add(eventoInicial);
 	}
