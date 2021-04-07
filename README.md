@@ -1,5 +1,7 @@
 # SMAFilas
-SMA T1
+SMA T1~
+
+GRUPO 12 - Eduardo Dornelles e João Almeida
 
 # INSTRUÇÕES DE USO:
 # para manipular os dados de entrada é necessário editar o arquivo parametros.txt
