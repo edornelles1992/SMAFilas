@@ -1,1 +1,5 @@
 https://drive.google.com/file/d/1MB68OH43r_6hXeLJBTgDaJna03QvcIiv/view?usp=sharing
+
+OBSERVAÇÃO: quando gravamos o video ainda não estava implementado o algoritmo para geração 
+de numeros aleatórios, mas o mesmo foi implementado e está sendo utilizado para simulação,
+a lógica é toda a mesma, só foi trocado o random do java para o nosso algoritmo.

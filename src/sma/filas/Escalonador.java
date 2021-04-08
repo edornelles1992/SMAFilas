@@ -2,23 +2,23 @@ package sma.filas;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class Escalonador {
 
 	public List<Evento> eventosAgendados = new ArrayList<>();
-	public Random random = new Random();
 	public int qtdAleatorios = 0;
-	public long seed;
+	public double seed;
+	public double mod = 2^48, a = 25214903917.0, c = 11;
 	
 	 Escalonador(double tempo, long seed) { // instancia o escalonador com o primeiro evento agendado no tempo recebido
-		 random = seed <= 0 ? new Random() : new Random(seed);
 		Evento eventoInicial = new Evento(Tipo.CHEGADA, tempo);
 		eventosAgendados.add(eventoInicial);
+		this.seed = seed;
 	}
 
 	public void agendaEvento(double tempo, Tipo tipoEvento, int minimo, int maximo) {
-		double nroSorteado = (maximo - minimo) * random.nextDouble() + minimo;
+		seed = geraNroAleatorio();
+		double nroSorteado = (maximo - minimo) * seed + minimo;
 		double tempoTotal = tempo + nroSorteado;
 		eventosAgendados.add(new Evento(tipoEvento, tempoTotal, nroSorteado));
 		qtdAleatorios++;
@@ -35,5 +35,9 @@ public class Escalonador {
 
 		eventosAgendados.remove(proximo); //ja foi passado para execução, remove do escalonador
 		return proximo;
+	}
+	
+	private double geraNroAleatorio() {
+		return (a * seed + a) % mod ;
 	}
 }
