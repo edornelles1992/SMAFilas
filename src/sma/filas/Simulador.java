@@ -32,7 +32,7 @@ public class Simulador {
 			} else if (evento.tipo.equals(Tipo.PASSAGEM)) {
 				this.passagem(filas.get(0), filas.get(1), evento.sorteio);
 			} else { //SAIDA
-				this.saida(filas.get(1), filas.get(1), evento.sorteio); 
+				this.saida(filas.get(0), filas.get(1), evento.sorteio); 
 			}
 		}
 		informaResultadoExecucao(filas);
