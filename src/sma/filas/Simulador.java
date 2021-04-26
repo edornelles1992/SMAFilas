@@ -41,19 +41,19 @@ public class Simulador {
 	
 	private void contabilizaTempos(Fila filaOrigem, Fila filaDestino, Tipo tipo, double tempoSorteio) {
 		double tempoAnterior = new Double(tempo);
-		if (tipo == Tipo.CHEGADA) {
-			
+		if (tipo == Tipo.CHEGADA) {			
 			filaOrigem.estado[filaOrigem.clientesNaFila] = tempoSorteio == 0 ? filaOrigem.primeiroClienteTempo
 					: (tempoAnterior - tempoSorteio) + filaOrigem.estado[filaOrigem.clientesNaFila];
 		} else if (tipo == Tipo.PASSAGEM) {
-			
+			System.out.println("CONTABILIZANDO PASSAGEM.....");
 		} else { //SAIDA
 			filaDestino.estado[filaDestino.clientesNaFila - 1] = (tempoAnterior - tempoSorteio) + filaDestino.estado[filaDestino.clientesNaFila - 1];
 		}
 	}
 
-	private void passagem(Fila filaOrigem, Fila filaDestino, double sorteio) {
-		// TODO: Contabiliza tempos nas duas filas.
+	private void passagem(Fila filaOrigem, Fila filaDestino, double tempoSorteio) {
+		tempo +=  tempoSorteio;
+		this.contabilizaTempos(filaOrigem, filaDestino, Tipo.PASSAGEM, tempoSorteio);
 		filaOrigem.clientesNaFila--;
 		if (filaOrigem.clientesNaFila >= filaOrigem.numeroServidores) { //passar da fila origem para a destino
 			escalonador.agendaEvento(tempo, Tipo.PASSAGEM, filaOrigem.tempoAtendimentoMinimo,
