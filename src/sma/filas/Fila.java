@@ -16,6 +16,7 @@ public class Fila {
 	public int capacidadeFila;
 	public int clientesNaFila = 0;		
 	public double[] estado = null;
+	public double tempoTotal;
 
 	@Override
 	public String toString() {

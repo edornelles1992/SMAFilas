@@ -31,7 +31,7 @@ public class Simulador {
 				this.chegada(filas.get(0), filas.get(1),evento.sorteio); 
 			} else if (evento.tipo.equals(Tipo.PASSAGEM)) {
 				this.passagem(filas.get(0), filas.get(1), evento.sorteio);
-			} else {
+			} else { //SAIDA
 				this.saida(filas.get(1), filas.get(1), evento.sorteio); 
 			}
 		}
@@ -42,6 +42,7 @@ public class Simulador {
 	private void contabilizaTempos(Fila filaOrigem, Fila filaDestino, Tipo tipo, double tempoSorteio) {
 		double tempoAnterior = new Double(tempo);
 		if (tipo == Tipo.CHEGADA) {
+			
 			filaOrigem.estado[filaOrigem.clientesNaFila] = tempoSorteio == 0 ? filaOrigem.primeiroClienteTempo
 					: (tempoAnterior - tempoSorteio) + filaOrigem.estado[filaOrigem.clientesNaFila];
 		} else if (tipo == Tipo.PASSAGEM) {
@@ -93,12 +94,15 @@ public class Simulador {
 	public void informaResultadoExecucao(ArrayList<Fila> filas) {
 		System.out.println("=============RESULTADOS===============");
 		System.out.println("Gerou " + qtdAleatorios + " Aleatórios!! FIM!!!");
-		double tempototal = 0;
-
+		
+		double tempoTotalSimulacao = 0;
 		for (Fila f : filas) {
+			double tempototal = 0;
 			for (int i = 0; i < f.estado.length; i++) {
-				tempototal += f.estado[i];
+				tempototal += f.estado[i];				
 			}
+			f.tempoTotal = tempototal;
+			tempoTotalSimulacao+= tempototal;
 		}
 
 		for (int x = 0; x < filas.size(); x++) {
@@ -107,12 +111,12 @@ public class Simulador {
 			System.out.println("Estado | Tempo | Probabilidade");
 			for (int i = 0; i < filas.get(x).estado.length; i++) {
 				String estado = String.format("%.2f", filas.get(x).estado[i]);
-				String probabilidade = String.format("%.2f", (filas.get(x).estado[i] * 100) / tempototal);
+				String probabilidade = String.format("%.2f", (filas.get(x).estado[i] * 100) / filas.get(x).tempoTotal);
 				System.out.println(i + "        " + estado + "       " + probabilidade + "%");
 			}
 		}
 
-		String tempototaltxt = String.format("%.3f", tempototal);
+		String tempototaltxt = String.format("%.2f", tempoTotalSimulacao);
 		System.out.println();
 		System.out.println("tempo total: " + tempototaltxt);
 		System.out.println("=================================");

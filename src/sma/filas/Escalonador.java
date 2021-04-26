@@ -38,6 +38,8 @@ public class Escalonador {
 	}
 	
 	private double geraNroAleatorio() {
-		return (a * seed + a) % mod ;
+		Double valor = ((a * seed + a) % mod) / mod;
+		String valorCortado = String.format("%.4f", valor).replace(",", ".");
+		return Double.parseDouble(valorCortado);
 	}
 }
