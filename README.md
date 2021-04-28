@@ -3,7 +3,7 @@ SMA T1~
 
 GRUPO 12 - Eduardo Dornelles e João Almeida
 
-# INSTRUÇÕES DE USO:
+# INSTRUÇÕES DE USO (ATUALIZADO 29/04/21):
 # para manipular os dados de entrada é necessário editar o arquivo parametros.txt nessa ordem:
 # EXEMPLO:
 
@@ -29,4 +29,8 @@ F // Indica fim dos dados dessa fila (necessário!)
 
 EXECUÇÃO:
 no terminal dentro da pasta do projeto digite:
-java -jar simulador.jar
+java -jar simulador.jar 5 
+5 = quantidade de execuções.
+
+OBSERVAÇÕES E VIDEO:
+estão descritos no arquivo updates.txt

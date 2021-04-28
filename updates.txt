@@ -1,0 +1,19 @@
+ENTREGA 08/04:
+
+https://drive.google.com/file/d/1MB68OH43r_6hXeLJBTgDaJna03QvcIiv/view?usp=sharing
+
+OBSERVAÇÃO: quando gravamos o video ainda não estava implementado o algoritmo para geração 
+de numeros aleatórios, mas o mesmo foi implementado e está sendo utilizado para simulação,
+a lógica é toda a mesma, só foi trocado o random do java para o nosso algoritmo.
+
+ENTREGA 29/04
+
+Para essa entrega efetuamos correções de bugs e refatorações que encontramos pertinentes.
+ - Corrigimos nosso método de número randomicos para somente gerar no intervalo entre 0 e 1.
+ - Refatoramos e criamos uma classe do Simulador Abstraindo a Fila para uma model e retirando as lógicas de dentro da mesma
+ para facilitar a implementaçao das filas em tandem.
+ -  Implementamos a lógica de passagem entre as filas e ajustes na chegada e saida para comportar a nova lógica.
+ - O programa agora recebe por parametro a quantidade de execuções para simular ex: java -jar simulador.jar 5 
+ 
+ PENDENTE:
+ - Ainda falta terminarmos de implementar a contabilização dos tempos para o calculo das medias de tempo da fila.
