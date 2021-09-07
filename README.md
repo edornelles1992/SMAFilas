@@ -1,9 +1,9 @@
 # SMAFilas
 SMA T1~
 
-GRUPO 12 - Eduardo Dornelles e João Almeida
+GRUPO 9 - Eduardo Dornelles e João Almeida
 
-# INSTRUÇÕES DE USO (ATUALIZADO 29/04/21):
+# INSTRUÇÕES DE USO
 # para manipular os dados de entrada é necessário editar o arquivo parametros.txt nessa ordem:
 # EXEMPLO:
 

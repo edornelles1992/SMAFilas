@@ -5,19 +5,21 @@ import java.util.List;
 
 public class Simulador {
 
-	public double tempo = 0;
+	public double tempoAtual = 0;
+	public double tempoUltimoEvento = 0;
 	public int qtdAleatorios = 0;
 	public List<Evento> eventosOcorridos = new ArrayList<>();
+	public int qtdFilas = 0;
 	// controle dos tempos dos estados da fila
 
 	public Escalonador escalonador;
 
 	public Simulador(ArrayList<Fila> filas, long seed, int qtdAleatorios) {
 		escalonador = new Escalonador(filas.get(0).primeiroClienteTempo, seed);
-		this.executa(filas, qtdAleatorios);
 	}
 
 	public ArrayList<Fila> executa(ArrayList<Fila> filas, int qtdAleatorios) {
+		this.qtdFilas = filas.size();
 		this.qtdAleatorios = qtdAleatorios;
 
 		for (Fila fila : filas) {
@@ -28,105 +30,68 @@ public class Simulador {
 			Evento evento = escalonador.executaProximoEvento();
 			this.eventosOcorridos.add(evento);
 			if (evento.tipo.equals(Tipo.CHEGADA)) {
-				this.chegada(filas.get(0), filas.get(1), evento.sorteio);
+				this.chegada(filas.get(0), evento.sorteio);
 			} else if (evento.tipo.equals(Tipo.PASSAGEM)) {
 				this.passagem(filas.get(0), filas.get(1), evento.sorteio);
 			} else { // SAIDA
-				this.saida(filas.get(0), filas.get(1), evento.sorteio);
+				this.saida(filas.get(0), evento.sorteio);
 			}
 		}
-		
-		informaResultadoExecucao(filas);
+
 		return filas;
 	}
 
-	private void contabilizaTempos(Fila filaOrigem, Fila filaDestino, Tipo tipo, double tempoSorteio) {
-		double tempoAnterior = new Double(tempo);
-		if (tipo == Tipo.CHEGADA) {
-			// TODO: ajustar contabilização
-			filaOrigem.estado[filaOrigem.clientesNaFila] = tempoSorteio == 0 ? filaOrigem.primeiroClienteTempo
-					: (tempoAnterior - tempoSorteio) + filaOrigem.estado[filaOrigem.clientesNaFila];
-		} else if (tipo == Tipo.PASSAGEM) {
-			// TODO: implementar contabilização
-			// System.out.println("CONTABILIZANDO PASSAGEM.....");
-		} else { // SAIDA
-			// TODO: ajustar contabilização
-			filaDestino.estado[filaDestino.clientesNaFila - 1] = (tempoAnterior - tempoSorteio)
-					+ filaDestino.estado[filaDestino.clientesNaFila - 1];
-		}
+	private void atualizaTempos(Fila filaOrigem, Fila filaDestino, Tipo tipo, double tempoSorteio) {
+ 			filaOrigem.estado[filaOrigem.clientesNaFila] += tempoAtual - tempoUltimoEvento;
 	}
 
 	private void passagem(Fila filaOrigem, Fila filaDestino, double tempoSorteio) {
-		tempo += tempoSorteio;
-		this.contabilizaTempos(filaOrigem, filaDestino, Tipo.PASSAGEM, tempoSorteio);
+		tempoUltimoEvento = tempoAtual;
+		tempoAtual += tempoSorteio;
+		this.atualizaTempos(filaOrigem, filaDestino, Tipo.PASSAGEM, tempoSorteio);
 		filaOrigem.clientesNaFila--;
 		if (filaOrigem.clientesNaFila >= filaOrigem.numeroServidores) { // passar da fila origem para a destino
-			escalonador.agendaEvento(tempo, Tipo.PASSAGEM, filaOrigem.tempoAtendimentoMinimo,
+			escalonador.agendaEvento(tempoAtual, Tipo.PASSAGEM, filaOrigem.tempoAtendimentoMinimo,
 					filaOrigem.tempoAtendimentoMaximo);
 		}
 		if (filaDestino.clientesNaFila < filaDestino.capacidadeFila) {
 			filaDestino.clientesNaFila++;
 			if (filaDestino.clientesNaFila <= filaDestino.numeroServidores) {
-				escalonador.agendaEvento(tempo, Tipo.SAIDA, filaDestino.tempoAtendimentoMinimo,
+				escalonador.agendaEvento(tempoAtual, Tipo.SAIDA, filaDestino.tempoAtendimentoMinimo,
 						filaDestino.tempoAtendimentoMaximo);
 			}
 		}
 	}
 
-	public void chegada(Fila filaOrigem, Fila filaDestino, double tempoSorteio) {
-		tempo += tempoSorteio == 0 ? filaOrigem.primeiroClienteTempo : tempoSorteio;
-		contabilizaTempos(filaOrigem, filaDestino, Tipo.CHEGADA, tempoSorteio);
+	public void chegada(Fila filaOrigem, double tempoSorteio) {
+		tempoUltimoEvento = tempoAtual;
+		tempoAtual += tempoSorteio == 0 ? filaOrigem.primeiroClienteTempo : tempoSorteio;
+		atualizaTempos(filaOrigem, null, Tipo.CHEGADA, tempoSorteio);
 		if (filaOrigem.capacidadeFila == -1 || filaOrigem.clientesNaFila < filaOrigem.capacidadeFila) {
 			filaOrigem.clientesNaFila++;
 			if (filaOrigem.clientesNaFila <= filaOrigem.numeroServidores) { // chegou e se encontra de frente pra um
-																			// servidor?
-				// agenda PASSAGEM
-				escalonador.agendaEvento(tempo, Tipo.PASSAGEM, filaOrigem.tempoAtendimentoMinimo,
-						filaOrigem.tempoAtendimentoMaximo);
+				// agenda saida pois é uma fila simples...
+				if (qtdFilas <= 1) { //Rede de 1 fila simples...
+					escalonador.agendaEvento(tempoAtual, Tipo.SAIDA, filaOrigem.tempoAtendimentoMinimo,
+							filaOrigem.tempoAtendimentoMaximo);
+				} else { //evento de passagem de fila para modelos em tandem..
+					escalonador.agendaEvento(tempoAtual, Tipo.PASSAGEM, filaOrigem.tempoAtendimentoMinimo,
+							filaOrigem.tempoAtendimentoMaximo);
+				}
 			}
 		}
-		escalonador.agendaEvento(tempo, Tipo.CHEGADA, filaOrigem.tempoChegadaMinimo, filaOrigem.tempoChegadaMaximo);
+		escalonador.agendaEvento(tempoAtual, Tipo.CHEGADA, filaOrigem.tempoChegadaMinimo, filaOrigem.tempoChegadaMaximo);
 	}
 
-	public void saida(Fila filaOrigem, Fila filaDestino, double tempoSorteio) {
-		tempo += tempoSorteio;
-		contabilizaTempos(filaOrigem, filaDestino, Tipo.CHEGADA, tempoSorteio);
-		filaDestino.clientesNaFila--;
-		if (filaDestino.clientesNaFila >= filaDestino.numeroServidores) {
-			escalonador.agendaEvento(tempo, Tipo.SAIDA, filaDestino.tempoAtendimentoMinimo,
-					filaDestino.tempoAtendimentoMaximo);
+	public void saida(Fila filaOrigem, double tempoSorteio) {
+		tempoUltimoEvento = tempoAtual;
+		tempoAtual += tempoSorteio;
+		atualizaTempos(filaOrigem, null, Tipo.SAIDA, tempoSorteio);
+		filaOrigem.clientesNaFila--;
+		if (filaOrigem.clientesNaFila >= filaOrigem.numeroServidores) {
+			escalonador.agendaEvento(tempoAtual, Tipo.SAIDA, filaOrigem.tempoAtendimentoMinimo,
+					filaOrigem.tempoAtendimentoMaximo);
 		}
-	}
-
-	public void informaResultadoExecucao(ArrayList<Fila> filas) {
-		System.out.println("=============RESULTADOS===============");
-		System.out.println("Gerou " + qtdAleatorios + " Aleatórios!! FIM!!!");
-
-		double tempoTotalSimulacao = 0;
-		for (Fila f : filas) {
-			double tempototal = 0;
-			for (int i = 0; i < f.estado.length; i++) {
-				tempototal += f.estado[i];
-			}
-			f.tempoTotal = tempototal;
-			tempoTotalSimulacao += tempototal;
-		}
-
-		for (int x = 0; x < filas.size(); x++) {
-			System.out.println();
-			System.out.println("Fila " + (x + 1));
-			System.out.println("Estado | Tempo | Probabilidade");
-			for (int i = 0; i < filas.get(x).estado.length; i++) {
-				String estado = String.format("%.2f", filas.get(x).estado[i]);
-				String probabilidade = String.format("%.2f", (filas.get(x).estado[i] * 100) / filas.get(x).tempoTotal);
-				System.out.println(i + "        " + estado + "       " + probabilidade + "%");
-			}
-		}
-
-		String tempototaltxt = String.format("%.2f", tempoTotalSimulacao);
-		System.out.println();
-		System.out.println("tempo total: " + tempototaltxt);
-		System.out.println("=================================");
 	}
 
 }
