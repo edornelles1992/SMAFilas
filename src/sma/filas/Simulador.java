@@ -10,8 +10,6 @@ public class Simulador {
 	public int qtdAleatorios = 0;
 	public List<Evento> eventosOcorridos = new ArrayList<>();
 	public int qtdFilas = 0;
-	// controle dos tempos dos estados da fila
-
 	public Escalonador escalonador;
 
 	public Simulador(ArrayList<Fila> filas, long seed, int qtdAleatorios) {

@@ -8,7 +8,7 @@ public class Escalonador {
 	public List<Evento> eventosAgendados = new ArrayList<>();
 	public int qtdAleatorios = 0;
 	public double seed;
-	//mod == 2^48
+	//M == 2^48
 	public double M = 281474976710656L, a = 25214903917L, c = 11L;
 
 	 Escalonador(double tempo, long seed) { // instancia o escalonador com o primeiro evento agendado no tempo recebido
