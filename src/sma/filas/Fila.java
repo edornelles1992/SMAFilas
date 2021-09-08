@@ -1,20 +1,38 @@
 package sma.filas;
 
-public class Fila {
+public class Fila implements Cloneable {
 
-	//paramtros recebidos
+	// paramtros recebidos
 
-	//parametros primeira fila
-	public double primeiroClienteTempo = -1; 
-	public int tempoChegadaMinimo = -1; 
+	public Fila() {
+		super();
+	}
+
+	public Fila(Fila fila) {
+		super();
+		this.primeiroClienteTempo = fila.primeiroClienteTempo;
+		this.tempoChegadaMinimo = fila.tempoChegadaMinimo;
+		this.tempoChegadaMaximo = fila.tempoChegadaMaximo;
+		this.tempoAtendimentoMinimo = fila.tempoAtendimentoMinimo;
+		this.tempoAtendimentoMaximo = fila.tempoAtendimentoMaximo;
+		this.numeroServidores = fila.numeroServidores;
+		this.capacidadeFila = fila.capacidadeFila;
+		this.clientesNaFila = fila.clientesNaFila;
+		this.estado = fila.estado;
+		this.tempoTotal = fila.tempoTotal;
+	}
+
+	// parametros primeira fila
+	public double primeiroClienteTempo = -1;
+	public int tempoChegadaMinimo = -1;
 	public int tempoChegadaMaximo = -1;
-	
-	//parametros em todas as filas.
+
+	// parametros em todas as filas.
 	public int tempoAtendimentoMinimo;
 	public int tempoAtendimentoMaximo;
 	public int numeroServidores;
 	public int capacidadeFila;
-	public int clientesNaFila = 0;		
+	public int clientesNaFila = 0;
 	public double[] estado = null;
 	public double tempoTotal;
 

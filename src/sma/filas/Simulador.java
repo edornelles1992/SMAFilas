@@ -23,6 +23,7 @@ public class Simulador {
 		this.qtdAleatorios = qtdAleatorios;
 
 		for (Fila fila : filas) {
+			fila.clientesNaFila = 0; //zera a fila;
 			fila.estado = new double[fila.capacidadeFila + 1]; // +1 para o estado 0 da fila!
 		}
 
