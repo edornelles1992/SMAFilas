@@ -22,6 +22,7 @@ public class Main {
 	private static void executaSimulador(ArrayList<Fila> filas) throws FileNotFoundException {
 		displayDadosRecebidos(filas);
 		ArrayList<Fila> filasProcessadas = new ArrayList<>();
+		System.out.println("EXECUTANDO SIMULAÇÕES...");
 		for (int i = 0; i < qtdSimulacoes; i++) {
 			System.out.println();
 			System.out.print("========= EXECUÇÃO NUMERO: " + (i + 1) + " ======== SEED: " + seedsCarregadas[i]);
@@ -40,9 +41,10 @@ public class Main {
 	private static void calculaMediaExecucoes(ArrayList<Fila> filas) {
 		System.out.println();
 		System.out.println();
+		System.out.println("SIMULAÇÕES ENCERRADAS...");
+		System.out.println();
 		System.out.println("====MEDIA DAS EXECUÇÕES========");
 		System.out.println();
-		System.out.println();	
 		
 		ArrayList<double[]> estadosFinais = new ArrayList<>(); 
 		for (int i = 0; i < filas.size(); i++) {			
@@ -122,7 +124,6 @@ public class Main {
 	private static void displayDadosRecebidos(ArrayList<Fila> filas) {
 		System.out.println("===== DADOS RECEBIDOS ===== ");
 		System.out.println("seeds: " + Arrays.toString(seedsCarregadas));
-		System.out.println(" ");
 		for (int i = 0; i < filas.size(); i++) {
 			System.out.print("FILA " + (i + 1));
 
@@ -133,6 +134,7 @@ public class Main {
 			}
 			System.out.println("TEMPO ATENDIMENTO: " + filas.get(i).tempoAtendimentoMinimo + " até "
 					+ filas.get(i).tempoAtendimentoMaximo);
+			System.out.println("NRO ALEATORIOS POR SIMULAÇÃO: "+qtdAleatorios);
 			System.out.println("==========================");
 		}
 	}
