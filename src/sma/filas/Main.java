@@ -26,6 +26,7 @@ public class Main {
 	private static void executaSimulador(ArrayList<Fila> filas) throws FileNotFoundException {
 		displayDadosRecebidos(filas);
 		ArrayList<Fila> filasProcessadas = new ArrayList<>();
+		System.out.println();
 		System.out.println("EXECUTANDO SIMULAÇÕES...");
 		for (int i = 0; i < qtdSimulacoes; i++) {
 			System.out.println();
@@ -108,11 +109,14 @@ public class Main {
 	}
 
 	private static void displayDadosRecebidos(ArrayList<Fila> filas) {
+		System.out.println();
 		System.out.println("===== DADOS RECEBIDOS ===== ");
 		System.out.println("seeds: " + Arrays.toString(seedsCarregadas));
 		System.out.println("Primeiro cliente no tempo: " + primeiroClienteTempo);
 		System.out.println("NRO ALEATORIOS POR SIMULAÇÃO: "+qtdAleatorios);
+		System.out.println();
 		System.out.println("============FILAS===============");
+		System.out.println();
 		for (int i = 0; i < filas.size(); i++) {
 			System.out.print("FILA " + (i + 1));
 
