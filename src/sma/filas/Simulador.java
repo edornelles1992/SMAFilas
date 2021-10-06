@@ -11,6 +11,7 @@ public class Simulador {
 	public List<Evento> eventosOcorridos = new ArrayList<>();
 	public int qtdFilas = 0;
 	public Escalonador escalonador;
+	public final int INFINITA = -1;
 
 	public Simulador(ArrayList<Fila> filas, long seed, int qtdAleatorios) {
 		escalonador = new Escalonador(filas.get(0).primeiroClienteTempo, seed);
@@ -30,6 +31,8 @@ public class Simulador {
 			this.eventosOcorridos.add(evento);
 			if (evento.tipo.equals(Tipo.CHEGADA)) {
 				this.chegada(filas.get(0), evento.sorteio);
+			} else if (evento.tipo.equals(Tipo.PASSAGEM)) {
+				this.passagem(filas.get(0), filas.get(1), evento.sorteio);
 			} else { // SAIDA
 				this.saida(filas.get(0), evento.sorteio);
 			}
@@ -40,6 +43,9 @@ public class Simulador {
 
 	private void atualizaTempos(Fila filaOrigem, Fila filaDestino, Tipo tipo, double tempoSorteio) {
  			filaOrigem.estado[filaOrigem.clientesNaFila] += tempoAtual - tempoUltimoEvento;
+ 			if (tipo.equals(Tipo.PASSAGEM)) {
+ 				filaDestino.estado[filaDestino.clientesNaFila] += tempoAtual - tempoUltimoEvento;
+ 			}
 	}
 
 
@@ -47,7 +53,7 @@ public class Simulador {
 		tempoUltimoEvento = tempoAtual;
 		tempoAtual += tempoSorteio == 0 ? filaOrigem.primeiroClienteTempo : tempoSorteio;
 		atualizaTempos(filaOrigem, null, Tipo.CHEGADA, tempoSorteio);
-		if (filaOrigem.capacidadeFila == -1 || filaOrigem.clientesNaFila < filaOrigem.capacidadeFila) {
+		if (filaOrigem.capacidadeFila == INFINITA || filaOrigem.clientesNaFila < filaOrigem.capacidadeFila) {
 			filaOrigem.clientesNaFila++;
 			if (filaOrigem.clientesNaFila <= filaOrigem.numeroServidores) { // chegou e se encontra de frente pra um
 					escalonador.agendaEvento(tempoAtual, Tipo.SAIDA, filaOrigem.tempoAtendimentoMinimo,
@@ -56,15 +62,33 @@ public class Simulador {
 		}
 		escalonador.agendaEvento(tempoAtual, Tipo.CHEGADA, filaOrigem.tempoChegadaMinimo, filaOrigem.tempoChegadaMaximo);
 	}
-
-	public void saida(Fila filaOrigem, double tempoSorteio) {
+	
+	private void passagem(Fila filaOrigem, Fila filaDestino, double tempoSorteio) {
 		tempoUltimoEvento = tempoAtual;
 		tempoAtual += tempoSorteio;
-		atualizaTempos(filaOrigem, null, Tipo.SAIDA, tempoSorteio);
+		this.atualizaTempos(filaOrigem, filaDestino, Tipo.PASSAGEM, tempoSorteio);
 		filaOrigem.clientesNaFila--;
-		if (filaOrigem.clientesNaFila >= filaOrigem.numeroServidores) {
-			escalonador.agendaEvento(tempoAtual, Tipo.SAIDA, filaOrigem.tempoAtendimentoMinimo,
+		if (filaOrigem.clientesNaFila >= filaOrigem.numeroServidores) { // passar da fila origem para a destino
+			escalonador.agendaEvento(tempoAtual, Tipo.PASSAGEM, filaOrigem.tempoAtendimentoMinimo,
 					filaOrigem.tempoAtendimentoMaximo);
+		}
+		if (filaDestino.clientesNaFila < filaDestino.capacidadeFila) {
+			filaDestino.clientesNaFila++;
+			if (filaDestino.clientesNaFila <= filaDestino.numeroServidores) {
+				escalonador.agendaEvento(tempoAtual, Tipo.SAIDA, filaDestino.tempoAtendimentoMinimo,
+						filaDestino.tempoAtendimentoMaximo);
+			}
+		}
+	}
+
+	public void saida(Fila fila, double tempoSorteio) {
+		tempoUltimoEvento = tempoAtual;
+		tempoAtual += tempoSorteio;
+		atualizaTempos(fila, null, Tipo.SAIDA, tempoSorteio);
+		fila.clientesNaFila--;
+		if (fila.clientesNaFila >= fila.numeroServidores) {
+			escalonador.agendaEvento(tempoAtual, Tipo.SAIDA, fila.tempoAtendimentoMinimo,
+					fila.tempoAtendimentoMaximo);
 		}
 	}
 

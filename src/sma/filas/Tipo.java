@@ -1,5 +1,5 @@
 package sma.filas;
 
 public enum Tipo {
-	CHEGADA,SAIDA
+	CHEGADA,SAIDA, PASSAGEM
 }

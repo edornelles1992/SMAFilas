@@ -20,6 +20,7 @@ public class Fila implements Cloneable {
 		this.clientesNaFila = fila.clientesNaFila;
 		this.estado = fila.estado;
 		this.tempoTotal = fila.tempoTotal;
+		this.nroFila = fila.nroFila;
 	}
 
 	// parametros primeira fila
@@ -35,6 +36,7 @@ public class Fila implements Cloneable {
 	public int clientesNaFila = 0;
 	public double[] estado = null;
 	public double tempoTotal;
+	public int nroFila;
 
 	@Override
 	public String toString() {
