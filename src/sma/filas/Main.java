@@ -4,6 +4,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 public class Main {
@@ -11,6 +13,7 @@ public class Main {
 	private static String[] seedsCarregadas;
 	private static int qtdSimulacoes;
 	private static int qtdAleatorios = 100000;
+	private static int totalFilas = 0;
 
 	public static void main(String[] args) throws FileNotFoundException {
 		System.out.println("========= SIMULADOR DE FILA SIMPLES ==========");
@@ -22,77 +25,93 @@ public class Main {
 	private static void executaSimulador(ArrayList<Fila> filas) throws FileNotFoundException {
 		displayDadosRecebidos(filas);
 		ArrayList<Fila> filasProcessadas = new ArrayList<>();
-		System.out.println("EXECUTANDO SIMULAÇÕES...");
+		System.out.println("EXECUTANDO SIMULAï¿½ï¿½ES...");
 		for (int i = 0; i < qtdSimulacoes; i++) {
 			System.out.println();
-			System.out.print("========= EXECUÇÃO NUMERO: " + (i + 1) + " ======== SEED: " + seedsCarregadas[i]);
+			System.out.print("========= EXECUï¿½ï¿½O NUMERO: " + (i + 1) + " ======== SEED: " + seedsCarregadas[i]);
 			Simulador simulador = new Simulador(filas, Integer.parseInt(seedsCarregadas[i]), qtdAleatorios);
 			simulador.executa(filas, qtdAleatorios);
 			// informaResultadoExecucao(filas, i);
-			for (Fila f: filas)
+			for (Fila f : filas)
 				filasProcessadas.add(new Fila(f));
-			
+
 			System.out.print(" ...OK");
 		}
 
-			calculaMediaExecucoes(filasProcessadas);
+		calculaMediaExecucoes(filasProcessadas);
 	}
 
-	private static void calculaMediaExecucoes(ArrayList<Fila> filas) {
+	private static void calculaMediaExecucoes(ArrayList<Fila> filasProcessadas) {
 		System.out.println();
 		System.out.println();
-		System.out.println("SIMULAÇÕES ENCERRADAS...");
+		System.out.println("SIMULAï¿½ï¿½ES ENCERRADAS...");
 		System.out.println();
-		System.out.println("====MEDIA DAS EXECUÇÕES========");
+		System.out.println("====MEDIA DAS EXECUï¿½ï¿½ES========");
 		System.out.println();
-		
-		ArrayList<double[]> estadosFinais = new ArrayList<>(); 
-		for (int i = 0; i < filas.size(); i++) {			
-			estadosFinais.add(filas.get(i).estado);			
-		}
-		
-		int qtdEstadosMax = 0;		
-		for (Fila fila : filas) {
-			if (fila.estado.length > qtdEstadosMax)
-				qtdEstadosMax = fila.estado.length;
-		}
-		
-		double[] totalMediaEstados = new double[qtdEstadosMax];
+		System.out.println();
 
-		for (int i = 0; i < qtdEstadosMax; i++) {	
-			double somador = 0.0;
-			double[] estado = {0};
-			
-			//soma valores de um estado de todas as filas
-			int j;
-			for (j = 0; j < estadosFinais.size(); j++) {
-				estado = estadosFinais.get(j);
-				somador += estado[i];
-			}			
-			totalMediaEstados[i] = somador/j;
-		}
-		
-		//total de tempo medio
 		double totalTempoMedio = 0.0;
-		for (int i = 0; i < totalMediaEstados.length; i++) {
-			totalTempoMedio += totalMediaEstados[i];
+
+		Map<Integer, ArrayList<Fila>> filasAgrupadas = new HashMap<>();
+
+		for (int i = 0; i < totalFilas; i++) {
+			filasAgrupadas.put(i + 1, new ArrayList<Fila>());
 		}
-		
-		//calcula probabilidade de cada estado da fila.
-		for (int i = 0; i < totalMediaEstados.length; i++) {
-			String probabilidade = String.format("%.2f", (totalMediaEstados[i] * 100) / totalTempoMedio);
-			System.out.println("Estado " + i + ": " + String.format("%.2f", totalMediaEstados[i]) + "  |   Probabilidade: " + probabilidade + "%");
+
+		for (Fila f : filasProcessadas) {
+			filasAgrupadas.get(f.nroFila).add(f);
 		}
-		
+
+		for (int x = 1; x <= totalFilas; x++) {
+			ArrayList<Fila> filas = filasAgrupadas.get(x);
+
+				System.out.println("Fila F" + x);
+				ArrayList<double[]> estadosFinais = new ArrayList<>();
+				for (int i = 0; i < filas.size(); i++) {
+					estadosFinais.add(filas.get(i).estado);
+				}
+
+				int qtdEstadosMax = filas.get(0).estado.length;
+
+				double[] totalMediaEstados = new double[qtdEstadosMax];
+
+				for (int i = 0; i < qtdEstadosMax; i++) {
+					double somador = 0.0;
+					double[] estado = { 0 };
+
+					// soma valores de um estado de todas as filas
+					int j;
+					for (j = 0; j < estadosFinais.size(); j++) {
+						estado = estadosFinais.get(j);
+						somador += estado[i];
+					}
+					totalMediaEstados[i] = somador / j;
+				}
+
+				// total de tempo medio
+
+				for (int i = 0; i < totalMediaEstados.length; i++) {
+					totalTempoMedio += totalMediaEstados[i];
+				}
+
+				// calcula probabilidade de cada estado da fila.
+				for (int i = 0; i < totalMediaEstados.length; i++) {
+					String probabilidade = String.format("%.2f", (totalMediaEstados[i] * 100) / totalTempoMedio);
+					System.out.println("Estado " + i + ": " + String.format("%.2f", totalMediaEstados[i])
+							+ "  |   Probabilidade: " + probabilidade + "%");
+				}		
+
+		}
+
 		System.out.println();
-		System.out.println("Média de tempo das execuções: " + String.format("%.2f", totalTempoMedio));
+		System.out.println("Mï¿½dia de tempo das execuï¿½ï¿½es: " + String.format("%.2f", totalTempoMedio));
 		System.out.println();
 	}
 
-	//Método para teste de uma execução isolada
+	// Mï¿½todo para teste de uma execuï¿½ï¿½o isolada
 	private static void informaResultadoExecucao(ArrayList<Fila> filas, int nroSimulacao) {
 		System.out.println("=============RESULTADOS===============");
-		System.out.println("Gerou " + 100000 + " Aleatórios!! FIM!!!");
+		System.out.println("Gerou " + 100000 + " Aleatï¿½rios!! FIM!!!");
 
 		double tempoTotalSimulacao = 0;
 		for (Fila f : filas) {
@@ -106,7 +125,7 @@ public class Main {
 
 		for (int x = 0; x < filas.size(); x++) {
 			System.out.println();
-			System.out.println("Fila " + (x + 1) + " Simulação " + (nroSimulacao + 1));
+			System.out.println("Fila " + (x + 1) + " Simulaï¿½ï¿½o " + (nroSimulacao + 1));
 			System.out.println("Estado | Tempo | Probabilidade");
 			for (int i = 0; i < filas.get(x).estado.length; i++) {
 				String estado = String.format("%.2f", filas.get(x).estado[i]);
@@ -130,11 +149,11 @@ public class Main {
 			System.out.println(" (G/G/" + filas.get(i).numeroServidores + "/" + filas.get(i).capacidadeFila + ")");
 			if (i == 0) {
 				System.out.println(
-						"CHEGADA: " + filas.get(i).tempoChegadaMinimo + " até " + filas.get(i).tempoChegadaMaximo);
+						"CHEGADA: " + filas.get(i).tempoChegadaMinimo + " atï¿½ " + filas.get(i).tempoChegadaMaximo);
 			}
-			System.out.println("TEMPO ATENDIMENTO: " + filas.get(i).tempoAtendimentoMinimo + " até "
+			System.out.println("TEMPO ATENDIMENTO: " + filas.get(i).tempoAtendimentoMinimo + " atï¿½ "
 					+ filas.get(i).tempoAtendimentoMaximo);
-			System.out.println("NRO ALEATORIOS POR SIMULAÇÃO: "+qtdAleatorios);
+			System.out.println("NRO ALEATORIOS POR SIMULAï¿½ï¿½O: "+qtdAleatorios);
 			System.out.println("==========================");
 		}
 	}
@@ -153,12 +172,12 @@ public class Main {
 				seedsCarregadas = comando.split(":")[1].split(",");
 				qtdSimulacoes = seedsCarregadas.length;
 				continue;
-			} else if (comando.contains("FIM_FILA")) { // fim da fila prepara dados para próxima, se houver.
+			} else if (comando.contains("FIM_FILA")) { // fim da fila prepara dados para prï¿½xima, se houver.
 				cont = 0;
 				parametros = new int[4]; // demais filas 4 parametros
 				filas.add(fila);
-				nroFilas++;
 				fila = new Fila();
+				nroFilas++;
 				continue;
 			} else {
 				parametros[cont] = Integer
@@ -171,16 +190,19 @@ public class Main {
 					fila.tempoAtendimentoMaximo = parametros[4];
 					fila.numeroServidores = parametros[5];
 					fila.capacidadeFila = parametros[6];
+					fila.nroFila = nroFilas;
 				} else { // demais filas sem precisar o tempo de chegada
 					fila.tempoAtendimentoMinimo = parametros[0];
 					fila.tempoAtendimentoMaximo = parametros[1];
 					fila.numeroServidores = parametros[2];
 					fila.capacidadeFila = parametros[3];
+					fila.nroFila = nroFilas;
 				}
 				cont++;
 			}
 		}
 
+		totalFilas = nroFilas - 1;
 		return filas;
 	}
 
