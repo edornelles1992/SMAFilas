@@ -29,12 +29,12 @@ public class Simulador {
 		while (escalonador.qtdAleatorios < qtdAleatorios) { // executa enquanto houver nro aleatórios
 			Evento evento = escalonador.executaProximoEvento();
 			this.eventosOcorridos.add(evento);
-			if (evento.tipo.equals(Tipo.CHEGADA)) {
+ 			if (evento.tipo.equals(Tipo.CHEGADA)) {
 				this.chegada(filas.get(0), evento.sorteio);
 			} else if (evento.tipo.equals(Tipo.PASSAGEM)) {
 				this.passagem(filas.get(0), filas.get(1), evento.sorteio);
 			} else { // SAIDA
-				this.saida(filas.get(0), evento.sorteio);
+				this.saida(filas.get(1), evento.sorteio);
 			}
 		}
 
@@ -56,7 +56,7 @@ public class Simulador {
 		if (filaOrigem.capacidadeFila == INFINITA || filaOrigem.clientesNaFila < filaOrigem.capacidadeFila) {
 			filaOrigem.clientesNaFila++;
 			if (filaOrigem.clientesNaFila <= filaOrigem.numeroServidores) { // chegou e se encontra de frente pra um
-					escalonador.agendaEvento(tempoAtual, Tipo.SAIDA, filaOrigem.tempoAtendimentoMinimo,
+					escalonador.agendaEvento(tempoAtual, Tipo.PASSAGEM, filaOrigem.tempoAtendimentoMinimo,
 							filaOrigem.tempoAtendimentoMaximo);
 			}
 		}
