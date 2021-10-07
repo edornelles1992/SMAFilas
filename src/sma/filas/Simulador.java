@@ -59,6 +59,8 @@ public class Simulador {
 					escalonador.agendaEvento(tempoAtual, Tipo.PASSAGEM, filaOrigem.tempoAtendimentoMinimo,
 							filaOrigem.tempoAtendimentoMaximo);
 			}
+		} else {
+			filaOrigem.perdas += 1;
 		}
 		escalonador.agendaEvento(tempoAtual, Tipo.CHEGADA, filaOrigem.tempoChegadaMinimo, filaOrigem.tempoChegadaMaximo);
 	}
@@ -78,6 +80,8 @@ public class Simulador {
 				escalonador.agendaEvento(tempoAtual, Tipo.SAIDA, filaDestino.tempoAtendimentoMinimo,
 						filaDestino.tempoAtendimentoMaximo);
 			}
+		} else {
+			filaDestino.perdas += 1;
 		}
 	}
 

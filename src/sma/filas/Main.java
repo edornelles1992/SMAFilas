@@ -43,6 +43,11 @@ public class Main {
 		calculaMediaExecucoes(filasProcessadas);
 	}
 
+	/**
+	 * Pega todas as execuções (com cada seed) e faz uma media dos resultados de
+	 * cada fila.
+	 * @param filasProcessadas
+	 */
 	private static void calculaMediaExecucoes(ArrayList<Fila> filasProcessadas) {
 		System.out.println();
 		System.out.println();
@@ -51,7 +56,7 @@ public class Main {
 		System.out.println("====MEDIA DAS EXECUÇÕES========");
 		System.out.println();
 
-		double totalTempoMedio = 0.0;
+
 		Map<Integer, ArrayList<Fila>> filasAgrupadas = new HashMap<>();
 
 		for (int i = 0; i < totalFilas; i++) {
@@ -62,9 +67,11 @@ public class Main {
 			filasAgrupadas.get(f.nroFila).add(f);
 		}
 
+		double totalTempoMedio = 0.0;
 		for (int x = 1; x <= totalFilas; x++) {
 			ArrayList<Fila> filas = filasAgrupadas.get(x);
-
+			double tempoMedio = 0.0;
+			
 				System.out.println("Fila F" + x);
 				ArrayList<double[]> estadosFinais = new ArrayList<>();
 				for (int i = 0; i < filas.size(); i++) {
@@ -91,16 +98,18 @@ public class Main {
 				// total de tempo medio
 
 				for (int i = 0; i < totalMediaEstados.length; i++) {
-					totalTempoMedio += totalMediaEstados[i];
+					tempoMedio += totalMediaEstados[i];
 				}
+				totalTempoMedio += tempoMedio;
 
 				// calcula probabilidade de cada estado da fila.
 				for (int i = 0; i < totalMediaEstados.length; i++) {
-					String probabilidade = String.format("%.2f", (totalMediaEstados[i] * 100) / totalTempoMedio);
+					String probabilidade = String.format("%.2f", (totalMediaEstados[i] * 100) / tempoMedio);
 					System.out.println("Estado " + i + ": " + String.format("%.2f", totalMediaEstados[i])
 							+ "  |   Probabilidade: " + probabilidade + "%");
 				}		
 				System.out.println();
+			//	System.out.println("Número de Perdas: " + filas);
 		}
 
 		System.out.println();
