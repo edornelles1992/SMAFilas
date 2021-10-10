@@ -17,7 +17,7 @@ public class Main {
 	private static double primeiroClienteTempo;
 
 	public static void main(String[] args) throws FileNotFoundException {
-		System.out.println("========= SIMULADOR DE FILA SIMPLES ==========");
+		System.out.println("========= SIMULADOR DE FILAS==========");
 		ArrayList<Fila> filas = lerDadosFila();
 		executaSimulador(filas);
 		System.out.println("==============FIM===================");
