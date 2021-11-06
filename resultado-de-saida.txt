@@ -1,0 +1,45 @@
+========= SIMULADOR DE FILA SIMPLES ==========
+
+===== DADOS RECEBIDOS =====
+seeds: [7, 8, 9, 10, 11]
+Primeiro cliente no tempo: 3.0
+NRO ALEATORIOS POR SIMULAÇÃO: 100000
+
+============FILAS===============
+
+FILA 1 (G/G/2/3)
+CHEGADA: 2 até 3
+TEMPO ATENDIMENTO: 2 até 5
+==========================
+FILA 2 (G/G/1/3)
+TEMPO ATENDIMENTO: 3 até 5
+==========================
+
+EXECUTANDO SIMULAÇÕES...
+
+========= EXECUÇÃO NUMERO: 1 ======== SEED: 7 ...OK
+========= EXECUÇÃO NUMERO: 2 ======== SEED: 8 ...OK
+========= EXECUÇÃO NUMERO: 3 ======== SEED: 9 ...OK
+========= EXECUÇÃO NUMERO: 4 ======== SEED: 10 ...OK
+========= EXECUÇÃO NUMERO: 5 ======== SEED: 11 ...OK
+
+SIMULAÇÕES ENCERRADAS...
+
+====MEDIA DAS EXECUÇÕES========
+
+Fila F1
+Estado 0: 17125,96  |   Probabilidade: 5,16%
+Estado 1: 200721,38  |   Probabilidade: 60,49%
+Estado 2: 113982,44  |   Probabilidade: 34,35%
+Estado 3: 5,75  |   Probabilidade: 0,00%
+
+Fila F2
+Estado 0: 11,65  |   Probabilidade: 0,00%
+Estado 1: 26144,34  |   Probabilidade: 7,88%
+Estado 2: 171136,23  |   Probabilidade: 51,57%
+Estado 3: 134543,30  |   Probabilidade: 40,55%
+
+
+Média de tempo das execuções: 663671,03
+
+==============FIM===================

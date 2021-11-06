@@ -11,7 +11,7 @@ public class Simulador {
 	public List<Evento> eventosOcorridos = new ArrayList<>();
 	public int qtdFilas = 0;
 	public Escalonador escalonador;
-	public final int INFINITA = -1;
+	public final int INFINITA = 0;
 
 	public Simulador(ArrayList<Fila> filas, long seed, int qtdAleatorios) {
 		escalonador = new Escalonador(filas.get(0).primeiroClienteTempo, seed);

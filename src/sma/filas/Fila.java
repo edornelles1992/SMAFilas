@@ -1,20 +1,22 @@
 package sma.filas;
 
+import java.util.Arrays;
+
 public class Fila implements Cloneable {
 
+	public double numeroFila;
 	public double primeiroClienteTempo = -1;
-	public int tempoChegadaMinimo = -1;
-	public int tempoChegadaMaximo = -1;
+	public double tempoChegadaMinimo = -1;
+	public double tempoChegadaMaximo = -1;
 
 	// parametros em todas as filas.
-	public int tempoAtendimentoMinimo;
-	public int tempoAtendimentoMaximo;
+	public double tempoAtendimentoMinimo;
+	public double tempoAtendimentoMaximo;
 	public int numeroServidores;
 	public int capacidadeFila;
 	public int clientesNaFila = 0;
 	public double[] estado = null;
 	public double tempoTotal;
-	public int nroFila;
 	public int perdas = 0;
 
 	public Fila() {
@@ -33,14 +35,17 @@ public class Fila implements Cloneable {
 		this.clientesNaFila = fila.clientesNaFila;
 		this.estado = fila.estado;
 		this.tempoTotal = fila.tempoTotal;
-		this.nroFila = fila.nroFila;
+		this.numeroFila = fila.numeroFila;
 	}
 
 	@Override
 	public String toString() {
-		return "Fila [tempoChegadaMinimo=" + tempoChegadaMinimo + ", tempoChegadaMaximo=" + tempoChegadaMaximo
+		return "Fila [numeroFila=" + numeroFila + ", primeiroClienteTempo=" + primeiroClienteTempo
+				+ ", tempoChegadaMinimo=" + tempoChegadaMinimo + ", tempoChegadaMaximo=" + tempoChegadaMaximo
 				+ ", tempoAtendimentoMinimo=" + tempoAtendimentoMinimo + ", tempoAtendimentoMaximo="
 				+ tempoAtendimentoMaximo + ", numeroServidores=" + numeroServidores + ", capacidadeFila="
-				+ capacidadeFila + ", clientesNaFila=" + clientesNaFila + "]";
+				+ capacidadeFila + ", clientesNaFila=" + clientesNaFila + ", estado=" + Arrays.toString(estado)
+				+ ", tempoTotal=" + tempoTotal + ", perdas=" + perdas + "]";
 	}
+
 }

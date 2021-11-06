@@ -17,7 +17,7 @@ public class Escalonador {
 		this.seed = seed;
 	}
 
-	public void agendaEvento(double tempo, Tipo tipoEvento, int minimo, int maximo) {
+	public void agendaEvento(double tempo, Tipo tipoEvento, double minimo, double maximo) {
 		double nroSorteado = (maximo - minimo) * geraNroAleatorio() + minimo;
 		double tempoTotal = tempo + nroSorteado;
 		String tempoTotalFormatted = String.format("%.4f", tempoTotal).replace(",", ".");
