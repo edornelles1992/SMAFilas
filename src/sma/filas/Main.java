@@ -80,8 +80,8 @@ public class Main {
 			}
 
 			int qtdEstadosMax = filas.get(0).estado.size();
-
-			double[] totalMediaEstados = new double[qtdEstadosMax];
+			
+			double[] totalMediaEstados = new double[filas.get(0).capacidadeFila == 0 ? qtdEstadosMax + 1 : filas.get(0).capacidadeFila + 1];
 
 			for (int i = 0; i < qtdEstadosMax; i++) {
 				double somador = 0.0;

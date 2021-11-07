@@ -15,8 +15,8 @@ public class Escalonador {
 		this.seed = seed;
 	}
 	
-	public void agendaEventoInicial(double tempo, Tipo tipoEvento, double minimo, double maximo, Fila origem, Fila destino) {
-		eventosAgendados.add(new Evento(tipoEvento, tempo, 0, origem, destino));		
+	public void agendaEventoInicial(double tempo, Tipo tipoEvento, double minimo, double maximo, Fila origem) {
+		eventosAgendados.add(new Evento(tipoEvento, tempo, 0, origem, null));		
 	}	
 
 	public void agendaEvento(double tempo, Tipo tipoEvento, double minimo, double maximo, Fila origem, Fila destino) {
@@ -45,5 +45,6 @@ public class Escalonador {
 		String valorCortado = String.format("%.4f", valor).replace(",", ".");
 		qtdAleatorios++;
 		return Double.parseDouble(valorCortado);
-	}
+	}	
+
 }

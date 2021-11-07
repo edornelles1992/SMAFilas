@@ -27,23 +27,24 @@ public class Simulador {
 	public ArrayList<Fila> executa(ArrayList<Fila> filas, int qtdAleatorios) {
 		this.qtdFilas = filas.size();
 		this.qtdAleatorios = qtdAleatorios;		
-		Fila filaDst = filaRoteada(filas.get(0));
-		escalonador.agendaEventoInicial(filas.get(0).primeiroClienteTempo, Tipo.CHEGADA, filas.get(0).tempoAtendimentoMinimo, filas.get(0).tempoAtendimentoMaximo, filas.get(0), filaDst);
 		
 		for (Fila fila : filas) {
 			fila.estado = new ArrayList<>();
-			fila.estado.add(0.0);
+			fila.estado.add(0.0); //estado 0 da fila
 			// adiciona os roteamentos da fila, se houverem
 			fila.roteamentos = roteamentos.stream().filter(roteamento -> roteamento.FilaOrigem == fila.numeroFila)
 					.collect(Collectors.toList());
 			fila.roteamentos.sort(Comparator.comparing(Roteamento::getProbabilidade));
 		}
+		
+		
+		escalonador.agendaEventoInicial(filas.get(0).primeiroClienteTempo, Tipo.CHEGADA, filas.get(0).tempoAtendimentoMinimo, filas.get(0).tempoAtendimentoMaximo, filas.get(0));
 
 		while (escalonador.qtdAleatorios < qtdAleatorios) { // executa enquanto houver nro aleatórios
 			Evento evento = escalonador.executaProximoEvento();
 			this.eventosOcorridos.add(evento);
 			if (evento.tipo.equals(Tipo.CHEGADA)) {
-				this.chegada(evento.origem, evento.destino, evento.sorteio);
+				this.chegada(evento.origem, null, evento.sorteio);
 			} else if (evento.tipo.equals(Tipo.PASSAGEM)) {
 				this.passagem(evento.origem, evento.destino, evento.sorteio);
 			} else { // SAIDA
@@ -54,28 +55,33 @@ public class Simulador {
 		return filas;
 	}
 
-	private void atualizaTempos(Fila filaOrigem, Fila filaDestino, Tipo tipo, double tempoSorteio) {
-
+	private void atualizaTempos(Fila filaOrigem) {
+		
 		if (filaOrigem.estado.size() <= filaOrigem.clientesNaFila) {
 			filaOrigem.estado.add(tempoAtual - tempoUltimoEvento);
 		} else {
 			filaOrigem.estado.set(filaOrigem.clientesNaFila,
 					filaOrigem.estado.get(filaOrigem.clientesNaFila) + (tempoAtual - tempoUltimoEvento));
 		}
-
-		if (filaDestino != null) {
-			if (filaDestino.estado.size() <= filaDestino.clientesNaFila)
-				filaDestino.estado.add(tempoAtual - tempoUltimoEvento);
-			else
-				filaDestino.estado.set(filaDestino.clientesNaFila,
-						filaDestino.estado.get(filaDestino.clientesNaFila) + (tempoAtual - tempoUltimoEvento));
+		
+		//atualizar tempo demais filas, exceto a fila ja ajustada
+		for (Fila fila : filas) {
+			if (fila.numeroFila == filaOrigem.numeroFila) continue;
+			
+			if (fila.estado.size() <= fila.clientesNaFila) {
+				fila.estado.add(tempoAtual - tempoUltimoEvento);
+			} else {
+				fila.estado.set(fila.clientesNaFila,
+						fila.estado.get(fila.clientesNaFila) + (tempoAtual - tempoUltimoEvento));
+			}
 		}
+
 	}
 
 	public void chegada(Fila filaOrigem, Fila filaDestino, double tempoSorteio) {
 		tempoUltimoEvento = tempoAtual;
 		tempoAtual += tempoSorteio == 0 ? filaOrigem.primeiroClienteTempo : tempoSorteio;
-		atualizaTempos(filaOrigem, filaDestino, Tipo.CHEGADA, tempoSorteio);
+		atualizaTempos(filaOrigem);
 		if (filaOrigem.capacidadeFila == INFINITA || filaOrigem.clientesNaFila < filaOrigem.capacidadeFila) {
 			filaOrigem.clientesNaFila++;
 			if (filaOrigem.clientesNaFila <= filaOrigem.numeroServidores) { // chegou e se encontra de frente pra um
@@ -92,18 +98,17 @@ public class Simulador {
 		} else {
 			filaOrigem.perdas += 1;
 		}
+				
 		escalonador.agendaEvento(tempoAtual, Tipo.CHEGADA, filaOrigem.tempoChegadaMinimo, filaOrigem.tempoChegadaMaximo,
-				filaOrigem, filaDestino);
+				filaOrigem, filaRoteada(filaOrigem));
 	}
 
 	private void passagem(Fila filaOrigem, Fila filaDestino, double tempoSorteio) {
 		tempoUltimoEvento = tempoAtual;
 		tempoAtual += tempoSorteio;
-		this.atualizaTempos(filaOrigem, filaDestino, Tipo.PASSAGEM, tempoSorteio);
+		this.atualizaTempos(filaOrigem);
 		filaOrigem.clientesNaFila--;
-		if (filaOrigem.clientesNaFila == -1) {
-			System.out.println("Ronaldo");
-		}
+
 		if (filaOrigem.clientesNaFila >= filaOrigem.numeroServidores) { // passar da fila origem para a destino
 			if (filaOrigem.roteamentos.isEmpty()) { //fila sem roteamento
 				escalonador.agendaEvento(tempoAtual, qtdFilas == 1 ? Tipo.SAIDA : Tipo.PASSAGEM,
@@ -125,11 +130,8 @@ public class Simulador {
 	public void saida(Fila fila, double tempoSorteio) {
 		tempoUltimoEvento = tempoAtual;
 		tempoAtual += tempoSorteio;
-		atualizaTempos(fila, null, Tipo.SAIDA, tempoSorteio);
+		atualizaTempos(fila);
 		fila.clientesNaFila--;
-		if (fila.clientesNaFila == -1) {
-			System.out.println("Ronaldo");
-		}
 		if (fila.clientesNaFila >= fila.numeroServidores) {
 			if (fila.roteamentos.isEmpty()) {
 				escalonador.agendaEvento(tempoAtual, qtdFilas == 1 ? Tipo.SAIDA : Tipo.PASSAGEM,
@@ -150,7 +152,6 @@ public class Simulador {
 	private Fila filaRoteada(Fila filaOrigem) {
 		double rnd = escalonador.geraNroAleatorio();
 		double acm = 0.0;
-
 		// valida a lista de roteamentos destino dessa fila
 		for (Roteamento roteamento : filaOrigem.roteamentos) {
 			acm += roteamento.probabilidade;
