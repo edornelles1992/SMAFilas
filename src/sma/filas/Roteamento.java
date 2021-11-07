@@ -18,4 +18,28 @@ public class Roteamento {
 				+ probabilidade + "]";
 	}
 
+	public double getFilaOrigem() {
+		return FilaOrigem;
+	}
+
+	public void setFilaOrigem(double filaOrigem) {
+		FilaOrigem = filaOrigem;
+	}
+
+	public double getFilaDestino() {
+		return FilaDestino;
+	}
+
+	public void setFilaDestino(double filaDestino) {
+		FilaDestino = filaDestino;
+	}
+
+	public double getProbabilidade() {
+		return probabilidade;
+	}
+
+	public void setProbabilidade(double probabilidade) {
+		this.probabilidade = probabilidade;
+	}
+
 }

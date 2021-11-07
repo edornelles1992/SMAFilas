@@ -1,6 +1,7 @@
 package sma.filas;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Fila implements Cloneable {
 
@@ -15,9 +16,10 @@ public class Fila implements Cloneable {
 	public int numeroServidores;
 	public int capacidadeFila;
 	public int clientesNaFila = 0;
-	public double[] estado = null;
+	public ArrayList<Double> estado = null;
 	public double tempoTotal;
 	public int perdas = 0;
+	public List<Roteamento> roteamentos = new ArrayList<>();
 
 	public Fila() {
 		super();
@@ -44,8 +46,8 @@ public class Fila implements Cloneable {
 				+ ", tempoChegadaMinimo=" + tempoChegadaMinimo + ", tempoChegadaMaximo=" + tempoChegadaMaximo
 				+ ", tempoAtendimentoMinimo=" + tempoAtendimentoMinimo + ", tempoAtendimentoMaximo="
 				+ tempoAtendimentoMaximo + ", numeroServidores=" + numeroServidores + ", capacidadeFila="
-				+ capacidadeFila + ", clientesNaFila=" + clientesNaFila + ", estado=" + Arrays.toString(estado)
-				+ ", tempoTotal=" + tempoTotal + ", perdas=" + perdas + "]";
+				+ capacidadeFila + ", clientesNaFila=" + clientesNaFila + ", estado=" + estado + ", tempoTotal="
+				+ tempoTotal + ", perdas=" + perdas + "]";
 	}
 
 }

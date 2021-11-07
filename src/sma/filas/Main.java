@@ -32,7 +32,7 @@ public class Main {
 		for (int i = 0; i < qtdSimulacoes; i++) {
 			System.out.println();
 			System.out.print("========= EXECUÇÃO NUMERO: " + (i + 1) + " ======== SEED: " + seedsCarregadas[i]);
-			Simulador simulador = new Simulador(filas, Integer.parseInt(seedsCarregadas[i]), qtdAleatorios);
+			Simulador simulador = new Simulador(filas, Integer.parseInt(seedsCarregadas[i]), qtdAleatorios, roteamentos);
 			simulador.executa(filas, qtdAleatorios);
 			// informaResultadoExecucao(filas, i);
 			for (Fila f : filas)
@@ -74,24 +74,24 @@ public class Main {
 			double tempoMedio = 0.0;
 
 			System.out.println("Fila F" + x);
-			ArrayList<double[]> estadosFinais = new ArrayList<>();
+			ArrayList<ArrayList<Double>> estadosFinais = new ArrayList<>();
 			for (int i = 0; i < filas.size(); i++) {
 				estadosFinais.add(filas.get(i).estado);
 			}
 
-			int qtdEstadosMax = filas.get(0).estado.length;
+			int qtdEstadosMax = filas.get(0).estado.size();
 
 			double[] totalMediaEstados = new double[qtdEstadosMax];
 
 			for (int i = 0; i < qtdEstadosMax; i++) {
 				double somador = 0.0;
-				double[] estado = { 0 };
+				ArrayList<Double> estado = new ArrayList<>();
 
 				// soma valores de um estado de todas as filas
 				int j;
 				for (j = 0; j < estadosFinais.size(); j++) {
 					estado = estadosFinais.get(j);
-					somador += estado[i];
+					somador += estado.get(i);
 				}
 				totalMediaEstados[i] = somador / j;
 			}

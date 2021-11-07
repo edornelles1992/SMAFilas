@@ -4,6 +4,8 @@ public class Evento {
 	public Tipo tipo;
 	public double tempo;
 	public double sorteio;
+	public Fila origem;
+	public Fila destino;
 
 	public Evento(Tipo tipo, double tempo, double sorteio) {
 		super();
@@ -11,11 +13,38 @@ public class Evento {
 		this.tempo = tempo;
 		this.sorteio = sorteio;
 	}
-	
-	public Evento(Tipo tipo, double tempo) {
+
+	public Evento(Tipo tipo, double tempo, Fila origem, Fila destino) {
 		super();
 		this.tipo = tipo;
 		this.tempo = tempo;
+		this.origem = origem;
+		this.destino = destino;
+	}
+
+	public Evento(Tipo tipo, double tempo, double sorteio, Fila origem, Fila destino) {
+		super();
+		this.tipo = tipo;
+		this.tempo = tempo;
+		this.sorteio = sorteio;
+		this.origem = origem;
+		this.destino = destino;
+	}
+
+	public Fila getOrigem() {
+		return origem;
+	}
+
+	public void setOrigem(Fila origem) {
+		this.origem = origem;
+	}
+
+	public Fila getDestino() {
+		return destino;
+	}
+
+	public void setDestino(Fila destino) {
+		this.destino = destino;
 	}
 
 	public Evento() {
