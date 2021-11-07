@@ -7,7 +7,11 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
-
+/**
+ * Classe main
+ * responsavel por ler  e formatar os dados da fila recebido por txt
+ * e solicitar a execução do simulador com os dados recebidos
+ */
 public class Main {
 
 	private static String[] seedsCarregadas;
@@ -17,6 +21,10 @@ public class Main {
 	private static double primeiroClienteTempo;
 	private static ArrayList<Roteamento> roteamentos = new ArrayList<>();
 
+	/**
+	 * Método main, solicitar os dados do arquivo e repassada as filas retornadas
+	 * para o simulador executar.
+	 */
 	public static void main(String[] args) throws FileNotFoundException {
 		System.out.println("========= SIMULADOR DE FILAS==========");
 		ArrayList<Fila> filas = lerDadosFila();
@@ -24,6 +32,14 @@ public class Main {
 		System.out.println("==============FIM===================");
 	}
 
+	/**
+	 * Método que inicia o simulador recebendo as filas.
+	 * Informa os dados recebidos no console e invoca o inicio da simulação.
+	 * O laço do método é baseado na quantidade de seeds informadas, caso seja somente uma seed,
+	 * somente havera uma iteração do lado para simulação.
+	 * Ao final a(s) fila(s) processada é gravada e repassada para o método que calcula as medias das
+	 * execuções.
+	 */
 	private static void executaSimulador(ArrayList<Fila> filas) throws FileNotFoundException {
 		displayDadosRecebidos(filas);
 		ArrayList<Fila> filasProcessadas = new ArrayList<>();
@@ -47,8 +63,6 @@ public class Main {
 	/**
 	 * Pega todas as execuções (com cada seed) e faz uma media dos resultados de
 	 * cada fila.
-	 * 
-	 * @param filasProcessadas
 	 */
 	private static void calculaMediaExecucoes(ArrayList<Fila> filasProcessadas) {
 		System.out.println();
@@ -118,6 +132,9 @@ public class Main {
 		System.out.println();
 	}
 
+	/**
+	 * Display no console para mostrar os dados recebidos via arquivo texto.
+	 */
 	private static void displayDadosRecebidos(ArrayList<Fila> filas) {
 		System.out.println();
 		System.out.println("===== DADOS RECEBIDOS ===== ");
@@ -141,6 +158,11 @@ public class Main {
 		}
 	}
 
+	/**
+	 * Método responsavel por ler o arquivo parametros.txt e interpretar os dados.
+	 * Itera por cada linha do arquivo e grava os dados de cada fila descrita
+	 * e posteriores roteamentos, conforme descrito no arquito de instruções.txt
+	 */
 	private static ArrayList<Fila> lerDadosFila() throws FileNotFoundException {
 		Scanner in = new Scanner(new FileReader("parametros.txt"));
 		ArrayList<Fila> filas = new ArrayList<>();
@@ -199,6 +221,9 @@ public class Main {
 		return filas;
 	}
 
+	/**
+	 * Método interno auxiliar ao lerDadosFila, organiza e grava os dados dos roteamentos.
+	 */
 	private static void populaRoteamentos(Scanner in) {
 		while (in.hasNextLine()) {
 			String comando = in.nextLine();

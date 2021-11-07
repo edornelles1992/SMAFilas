@@ -3,6 +3,10 @@ package sma.filas;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Escalonador: responsavel por agendar os eventos solicitado pelo simulador e
+ * gerar os números aleatórios
+ */
 public class Escalonador {
 
 	public List<Evento> eventosAgendados = new ArrayList<>();
@@ -15,10 +19,17 @@ public class Escalonador {
 		this.seed = seed;
 	}
 	
+	/**
+	 * método para agendar o evento inicial do simulador
+	 */
 	public void agendaEventoInicial(double tempo, Tipo tipoEvento, double minimo, double maximo, Fila origem) {
 		eventosAgendados.add(new Evento(tipoEvento, tempo, 0, origem, null));		
 	}	
 
+	/**
+	 * método que agenda os eventos recebendo o tempo, tipo do evento, intervalos minimo e maximo de atendimento,
+	 * fila origem e fila destino do evento agendado.
+	 */
 	public void agendaEvento(double tempo, Tipo tipoEvento, double minimo, double maximo, Fila origem, Fila destino) {
 		double nroSorteado = (maximo - minimo) * geraNroAleatorio() + minimo;
 		double tempoTotal = tempo + nroSorteado;
@@ -26,6 +37,9 @@ public class Escalonador {
 		eventosAgendados.add(new Evento(tipoEvento, Double.parseDouble(tempoTotalFormatted), nroSorteado, origem, destino));		
 	}	
 
+	/**
+	 * Métódo que busca na lista de eventos agendados qual é o próximo a ser executado com base no tempo.
+	 */
 	public Evento executaProximoEvento() {
 		Evento proximo = eventosAgendados.get(0);
 
@@ -39,6 +53,10 @@ public class Escalonador {
 		return proximo;
 	}
 	
+	/**
+	 * Gerador de números aleatórios com base na seed recebido, já convertendo para um ponto flutuante
+	 * e cortando para quatro casas decimais o resultado.
+	 */
 	public double geraNroAleatorio() {
 		seed = (a * seed + c) % M;
 		Double valor = seed / M;

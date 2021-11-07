@@ -1,5 +1,7 @@
 package sma.filas;
-
+/**
+ * Classe modelo que representa um evento de uma fila.
+ */
 public class Evento {
 	public Tipo tipo;
 	public double tempo;

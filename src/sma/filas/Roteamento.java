@@ -1,5 +1,9 @@
 package sma.filas;
 
+/**
+ * Classe modelo que representa um roteamento de uma fila, indicando
+ * a fila de origem, destino e a probabilidade deste passagem ocorrer.
+ */
 public class Roteamento {
 	public double FilaOrigem;
 	public double FilaDestino;

@@ -1,45 +1,58 @@
-========= SIMULADOR DE FILA SIMPLES ==========
+========= SIMULADOR DE FILAS==========
 
-===== DADOS RECEBIDOS =====
-seeds: [7, 8, 9, 10, 11]
-Primeiro cliente no tempo: 3.0
-NRO ALEATORIOS POR SIMULA√á√ÉO: 100000
+===== DADOS RECEBIDOS ===== 
+seeds: [1]
+Primeiro cliente no tempo: 1.0
+NRO ALEATORIOS POR SIMULA«√O: 100000
 
 ============FILAS===============
 
-FILA 1 (G/G/2/3)
-CHEGADA: 2 at√© 3
-TEMPO ATENDIMENTO: 2 at√© 5
+FILA 1 (G/G/1)
+CHEGADA: 1.0 atÈ 4.0
+TEMPO ATENDIMENTO: 1.0 atÈ 1.5
 ==========================
-FILA 2 (G/G/1/3)
-TEMPO ATENDIMENTO: 3 at√© 5
+FILA 2 (G/G/3/5)
+TEMPO ATENDIMENTO: 5.0 atÈ 10.0
+==========================
+FILA 3 (G/G/2/8)
+TEMPO ATENDIMENTO: 10.0 atÈ 20.0
 ==========================
 
-EXECUTANDO SIMULA√á√ïES...
+EXECUTANDO SIMULA«’ES...
 
-========= EXECU√á√ÉO NUMERO: 1 ======== SEED: 7 ...OK
-========= EXECU√á√ÉO NUMERO: 2 ======== SEED: 8 ...OK
-========= EXECU√á√ÉO NUMERO: 3 ======== SEED: 9 ...OK
-========= EXECU√á√ÉO NUMERO: 4 ======== SEED: 10 ...OK
-========= EXECU√á√ÉO NUMERO: 5 ======== SEED: 11 ...OK
+========= EXECU«√O NUMERO: 1 ======== SEED: 1 ...OK
 
-SIMULA√á√ïES ENCERRADAS...
+SIMULA«’ES ENCERRADAS...
 
-====MEDIA DAS EXECU√á√ïES========
+====MEDIA DAS EXECU«’ES========
 
 Fila F1
-Estado 0: 17125,96  |   Probabilidade: 5,16%
-Estado 1: 200721,38  |   Probabilidade: 60,49%
-Estado 2: 113982,44  |   Probabilidade: 34,35%
-Estado 3: 5,75  |   Probabilidade: 0,00%
+Estado 0: 65010,24  |   Probabilidade: 25,42%
+Estado 1: 181236,23  |   Probabilidade: 70,88%
+Estado 2: 9456,42  |   Probabilidade: 3,70%
+Estado 3: 4,48  |   Probabilidade: 0,00%
+Estado 4: 0,00  |   Probabilidade: 0,00%
 
 Fila F2
-Estado 0: 11,65  |   Probabilidade: 0,00%
-Estado 1: 26144,34  |   Probabilidade: 7,88%
-Estado 2: 171136,23  |   Probabilidade: 51,57%
-Estado 3: 134543,30  |   Probabilidade: 40,55%
+Estado 0: 22466,22  |   Probabilidade: 8,79%
+Estado 1: 101994,19  |   Probabilidade: 39,89%
+Estado 2: 115051,32  |   Probabilidade: 44,99%
+Estado 3: 15363,16  |   Probabilidade: 6,01%
+Estado 4: 832,49  |   Probabilidade: 0,33%
+Estado 5: 0,00  |   Probabilidade: 0,00%
+
+Fila F3
+Estado 0: 135112,33  |   Probabilidade: 52,84%
+Estado 1: 92273,03  |   Probabilidade: 36,09%
+Estado 2: 24771,67  |   Probabilidade: 9,69%
+Estado 3: 3365,32  |   Probabilidade: 1,32%
+Estado 4: 185,03  |   Probabilidade: 0,07%
+Estado 5: 0,00  |   Probabilidade: 0,00%
+Estado 6: 0,00  |   Probabilidade: 0,00%
+Estado 7: 0,00  |   Probabilidade: 0,00%
+Estado 8: 0,00  |   Probabilidade: 0,00%
 
 
-M√©dia de tempo das execu√ß√µes: 663671,03
+MÈdia de tempo das execuÁıes: 767122,14
 
 ==============FIM===================

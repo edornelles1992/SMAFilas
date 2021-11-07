@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
-
+/**
+ * Classe do simulador, recebe as filas e roteamentos carregados e executa a simulação.
+ */
 public class Simulador {
 
 	public double tempoAtual = 0;
@@ -17,13 +19,22 @@ public class Simulador {
 	List<Roteamento> roteamentos = new ArrayList<>();
 	List<Fila> filas = null;
 
+	/**
+	 * Construtor: ao instanciar carrega a lista de filas, seed a ser passada para o seu escalonador, 
+	 * quantidade de aleatórios e a lista de roteamentos (caso houver).
+	 */
 	public Simulador(ArrayList<Fila> filas, long seed, int qtdAleatorios, ArrayList<Roteamento> roteamentos) {
 		this.roteamentos = roteamentos;
 		this.filas = filas;			
-		escalonador = new Escalonador(seed);
-
+		this.escalonador = new Escalonador(seed);
 	}
 
+	/**
+	 * Método responsavel pelo ciclo da simulação, recebe as filas, inicia seus estados e ordena a lista de roteamento
+	 * de cada uma para facilitar a busca do roteamento correto posteriormente.
+	 * Agenda o evento inicial para começar a simulação e após isso entre em um looping até consumir todos os aleatórios,
+	 * onde em cada ciclo é recebido o próximo evento a ser executado.
+	 */
 	public ArrayList<Fila> executa(ArrayList<Fila> filas, int qtdAleatorios) {
 		this.qtdFilas = filas.size();
 		this.qtdAleatorios = qtdAleatorios;		
@@ -35,8 +46,7 @@ public class Simulador {
 			fila.roteamentos = roteamentos.stream().filter(roteamento -> roteamento.FilaOrigem == fila.numeroFila)
 					.collect(Collectors.toList());
 			fila.roteamentos.sort(Comparator.comparing(Roteamento::getProbabilidade));
-		}
-		
+		}		
 		
 		escalonador.agendaEventoInicial(filas.get(0).primeiroClienteTempo, Tipo.CHEGADA, filas.get(0).tempoAtendimentoMinimo, filas.get(0).tempoAtendimentoMaximo, filas.get(0));
 
@@ -55,19 +65,12 @@ public class Simulador {
 		return filas;
 	}
 
+	/**
+	 * Responsavel por atualizar os tempos nos estados das filas.
+	 */
 	private void atualizaTempos(Fila filaOrigem) {
-		
-		if (filaOrigem.estado.size() <= filaOrigem.clientesNaFila) {
-			filaOrigem.estado.add(tempoAtual - tempoUltimoEvento);
-		} else {
-			filaOrigem.estado.set(filaOrigem.clientesNaFila,
-					filaOrigem.estado.get(filaOrigem.clientesNaFila) + (tempoAtual - tempoUltimoEvento));
-		}
-		
-		//atualizar tempo demais filas, exceto a fila ja ajustada
 		for (Fila fila : filas) {
-			if (fila.numeroFila == filaOrigem.numeroFila) continue;
-			
+
 			if (fila.estado.size() <= fila.clientesNaFila) {
 				fila.estado.add(tempoAtual - tempoUltimoEvento);
 			} else {
@@ -78,18 +81,21 @@ public class Simulador {
 
 	}
 
+	/**
+	 * Método que faz a lógica de uma chegada, tratado para caso seja uma rede de filas com roteamento.
+	 */
 	public void chegada(Fila filaOrigem, Fila filaDestino, double tempoSorteio) {
 		tempoUltimoEvento = tempoAtual;
 		tempoAtual += tempoSorteio == 0 ? filaOrigem.primeiroClienteTempo : tempoSorteio;
 		atualizaTempos(filaOrigem);
 		if (filaOrigem.capacidadeFila == INFINITA || filaOrigem.clientesNaFila < filaOrigem.capacidadeFila) {
 			filaOrigem.clientesNaFila++;
-			if (filaOrigem.clientesNaFila <= filaOrigem.numeroServidores) { // chegou e se encontra de frente pra um
-				if (filaOrigem.roteamentos.isEmpty()) {
+			if (filaOrigem.clientesNaFila <= filaOrigem.numeroServidores) { // chegou e se encontra de frente pra um servidor
+				if (filaOrigem.roteamentos.isEmpty()) { //sem roteamentos
 					escalonador.agendaEvento(tempoAtual, qtdFilas == 1 ? Tipo.SAIDA : Tipo.PASSAGEM,
 							filaOrigem.tempoAtendimentoMinimo, filaOrigem.tempoAtendimentoMaximo, filaOrigem,
 							filaDestino);
-				} else {
+				} else { //com roteamentos
 					Fila filaDst = this.filaRoteada(filaOrigem);
 					escalonador.agendaEvento(tempoAtual, filaDst != null ? Tipo.PASSAGEM : Tipo.SAIDA, filaOrigem.tempoAtendimentoMinimo,
 							filaOrigem.tempoAtendimentoMaximo, filaOrigem, filaDst);
@@ -103,6 +109,9 @@ public class Simulador {
 				filaOrigem, filaRoteada(filaOrigem));
 	}
 
+	/**
+	 * Método que fas a lógica da passagem, tratado para caso seja uma rede de filas com roteamento
+	 */
 	private void passagem(Fila filaOrigem, Fila filaDestino, double tempoSorteio) {
 		tempoUltimoEvento = tempoAtual;
 		tempoAtual += tempoSorteio;
@@ -127,6 +136,9 @@ public class Simulador {
 		}
 	}
 
+	/**
+	 * Método que fas a lógica da saída de uma fila, tratado para caso seja uma rede de filas com roteamento
+	 */
 	public void saida(Fila fila, double tempoSorteio) {
 		tempoUltimoEvento = tempoAtual;
 		tempoAtual += tempoSorteio;
@@ -148,6 +160,7 @@ public class Simulador {
 	/**
 	 * Trata o roteamento das filas, recebe a fila origem com seus roteamentos
 	 * e consome um aleatorio para saber a fila destino ou retorna null se for uma saída.
+	 * Os roteamentos recebido já estao ordenados de forma crescente na execução desse método.
 	 */
 	private Fila filaRoteada(Fila filaOrigem) {
 		double rnd = escalonador.geraNroAleatorio();

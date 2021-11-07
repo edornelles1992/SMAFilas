@@ -2,7 +2,9 @@ package sma.filas;
 
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * Classe modelo que representa uma fila no simulador.
+ */
 public class Fila implements Cloneable {
 
 	public double numeroFila;
